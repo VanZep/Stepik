@@ -13,16 +13,25 @@ Sample Output:
 
 nums = tuple(input().split())
 
-# 1-ое решение
-for i, num in enumerate(nums):
-    if nums.count(num) > 1:
-        print(i, end=' ')
-print()
 
-# 2-ое решение
-indexes = ()
-for i, num in enumerate(nums):
-    if nums.count(num) > 1:
-        indexes += (i,)
+def func_1():
+    """1-ое решение."""
+    for i, num in enumerate(nums):
+        if nums.count(num) > 1:
+            print(i, end=' ')
+    print()
 
-print(*indexes)
+
+def func_2():
+    """2-ое решение."""
+    indexes = ()
+    for i, num in enumerate(nums):
+        if nums.count(num) > 1:
+            indexes += (i,)
+
+    print(*indexes)
+
+
+if __name__ == '__main__':
+    func_1()
+    func_2()

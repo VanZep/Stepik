@@ -17,19 +17,31 @@ Sample Output:
 
 nums = tuple(input().split())
 
-# 1-ое решение
-lst = []
-[lst.append(num) for num in nums if num not in lst]
-unique_nums = tuple(lst)
-print(*unique_nums)
 
-# 2-ое решение
-unique_nums = ()
-for num in nums:
-    if num not in unique_nums:
-        unique_nums += (num,)
-print(*unique_nums)
+def func_1():
+    """1-ое решение."""
+    lst = []
+    [lst.append(num) for num in nums if num not in lst]
+    unique_nums = tuple(lst)
+    print(*unique_nums)
 
-# 3-е решение
-unique_nums = tuple(dict.fromkeys(nums))
-print(*unique_nums)
+
+def func_2():
+    """2-ое решение."""
+    unique_nums = ()
+    for num in nums:
+        if num not in unique_nums:
+            unique_nums += (num,)
+    print(*unique_nums)
+
+
+def func_3():
+    """3-е решение."""
+    unique_nums = tuple(dict.fromkeys(nums))
+    print(*unique_nums)
+
+
+if __name__ == '__main__':
+    func_1()
+    func_2()
+    func_3()
