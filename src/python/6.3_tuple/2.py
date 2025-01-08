@@ -13,9 +13,15 @@ Sample Output:
 Уфа Казань Самара Москва
 """
 
-cities = tuple(input().split())
+cities_tuple = tuple(input().split())
 MOSCOW = 'Москва'
 
-cities = cities + (MOSCOW,) if MOSCOW not in cities else cities
 
-print(*cities)
+def func(cities):
+    """Решение."""
+    cities = cities + (MOSCOW,) if MOSCOW not in cities else cities
+    print(*cities)
+
+
+if __name__ == '__main__':
+    func(cities_tuple)

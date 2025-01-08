@@ -43,5 +43,7 @@ def func_3():
 
 if __name__ == '__main__':
     func_1()
+    print()
     func_2()
+    print()
     func_3()

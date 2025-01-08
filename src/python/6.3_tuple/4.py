@@ -12,4 +12,15 @@ Sample Output:
 варвара василиса василий
 """
 
-print(*(name.lower() for name in tuple(input().split()) if name.lower().count('ва')))
+names_tuple = tuple(input().split())
+
+
+def func(names):
+    """Решение."""
+    print(*(
+        name.lower() for name in names_tuple if name.lower().count('ва')
+    ))
+
+
+if __name__ == '__main__':
+    func(names_tuple)

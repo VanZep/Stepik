@@ -34,4 +34,5 @@ def func_2():
 
 if __name__ == '__main__':
     func_1()
+    print()
     func_2()

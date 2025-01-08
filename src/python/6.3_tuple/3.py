@@ -13,6 +13,14 @@ Sample Output:
 Воронеж Самара Тольятти Пермь
 """
 
-cities = tuple(input().split())
-new_cities = tuple(city for city in cities if city != 'Ульяновск')
-print(*new_cities)
+cities_tuple = tuple(input().split())
+
+
+def func(cities):
+    """Решение."""
+    new_cities = tuple(city for city in cities if city != 'Ульяновск')
+    print(*new_cities)
+
+
+if __name__ == '__main__':
+    func(cities_tuple)
