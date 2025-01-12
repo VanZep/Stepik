@@ -42,7 +42,8 @@ def func_2():
 def func_3():
     """3-е решение."""
     n, lst = int(lst_in[0]), lst_in[1:]
-    print({key: value for key, value in enumerate(lst, n)}.get(4))
+    d = {key: value for key, value in enumerate(lst, n)}
+    print(d.get(4))
 
 
 if __name__ == '__main__':
