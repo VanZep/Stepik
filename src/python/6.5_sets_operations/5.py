@@ -13,8 +13,8 @@ Sample Output:
 НЕ ДОПУЩЕН
 """
 
-score_list: list[int] = list(map(int, input().split()))
-TWO: int = 2
+score_list = list(map(int, input().split()))
+TWO = 2
 
 
 def func_1():

@@ -12,13 +12,13 @@ Sample Output:
 ДА
 """
 
-num: int = int(input())
-num_set_1: set = {2, 3, 5}
+num = int(input())
+num_set_1 = {2, 3, 5}
 
 
 def func_1():
     """1-ое решение."""
-    num_set_2: set = set()
+    num_set_2 = set()
     for i in (1, 2, 3, 5, 7):
         if num % i == 0:
             num_set_2.add(i)
@@ -27,7 +27,7 @@ def func_1():
 
 def func_2():
     """2-ое решение."""
-    num_set_2: set = set(i for i in (1, 2, 3, 5, 7) if num % i == 0)
+    num_set_2 = set(i for i in (1, 2, 3, 5, 7) if num % i == 0)
     print(('НЕТ', 'ДА')[num_set_1 < num_set_2])
 
 
