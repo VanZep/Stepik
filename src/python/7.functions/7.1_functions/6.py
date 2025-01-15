@@ -28,7 +28,7 @@ from string import ascii_letters, digits
 EMAIL = input()
 
 
-def email_validator_1(email):
+def print_is_valid_email_1(email):
     """Проверяет валидность email-адреса."""
     print(
         'ДА'
@@ -41,7 +41,7 @@ def email_validator_1(email):
     )
 
 
-def email_validator_2(email):
+def print_is_valid_email_2(email):
     """Проверяет валидность email-адреса."""
     print(
         'ДА'
@@ -51,6 +51,6 @@ def email_validator_2(email):
 
 
 if __name__ == '__main__':
-    email_validator_1(EMAIL)
+    print_is_valid_email_1(EMAIL)
     print()
-    email_validator_2(EMAIL)
+    print_is_valid_email_2(EMAIL)
