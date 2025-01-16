@@ -18,7 +18,7 @@ names_tuple = tuple(input().split())
 def func(names):
     """Решение."""
     print(*(
-        name.lower() for name in names_tuple if name.lower().count('ва')
+        name.lower() for name in names if name.lower().count('ва')
     ))
 
 

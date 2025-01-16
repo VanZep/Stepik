@@ -27,10 +27,10 @@ Sample Output:
 2.0
 """
 
-# import sys
+import sys
 
-# lst_in = list(map(int, sys.stdin.readlines()))
-lst_in = [1, 2, 3, 3, 2, 4, 0]
+lst_in = list(map(int, sys.stdin.readlines()))
+# lst_in = [1, 2, 3, 3, 2, 4, 0]
 
 
 def func_1():
