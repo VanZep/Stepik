@@ -27,12 +27,18 @@ Sample Output:
 
 
 def is_even_number(value):
-    """Проверяет число на чётность, если чётное, возвращает его."""
+    """Проверяет число на чётность, если чётное, возвращает True."""
     return not value % 2
 
 
-x = 0
-while x != 1:
-    x = int(input())
-    if is_even_number(x):
-        print(x)
+def main():
+    """Основная функция."""
+    x = 0
+    while x != 1:
+        x = int(input())
+        if is_even_number(x):
+            print(x)
+
+
+if __name__ == '__main__':
+    main()
