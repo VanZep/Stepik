@@ -27,26 +27,28 @@ Sample Output:
 tp = input().strip()
 
 
-def func_1(length, width):
+def func(length, width):
     """1-ое решение."""
     if tp == 'RECT':
         def get_sq(length, width):
+            """Вычисляет площадь прямоугольника."""
             return length * width
     else:
         def get_sq(length):
+            """Вычисляет площадь квадрата."""
             return length ** 2
     print(get_sq(length, width))
 
 
 def get_sq(length, width=None):
-    """2-ое решение."""
+    """2-ое решение. Вычисляет площадь."""
     if tp == 'RECT':
         return length * width
     return length ** 2
 
 
 if __name__ == '__main__':
-    length = 1
-    width = 2
-    func_1(length, width)
-    print(get_sq(length, width))
+    LENGTH = 1
+    WIDTH = 2
+    func(LENGTH, WIDTH)
+    print(get_sq(LENGTH, WIDTH))
