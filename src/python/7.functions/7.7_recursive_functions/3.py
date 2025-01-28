@@ -22,11 +22,11 @@ Sample Output:
 
 def fib_rec(N, f=[1, 1]):
     if N <= 2:
-        return f if N != 1 else [f[0]]
+        return f if N == 2 else [N]
     f.append(f[-2] + f[-1])
     return fib_rec(N - 1, f)
 
 
 if __name__ == '__main__':
     N = int(input('Ведите положительное число: '))
-    print(fib_rec(N))
+    print(*fib_rec(N))
