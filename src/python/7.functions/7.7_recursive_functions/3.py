@@ -20,11 +20,15 @@ Sample Output:
 """
 
 
-def fib_rec(N, f=[1, 1]):
-    if N <= 2:
-        return f if N == 2 else [N]
+def fib_rec(n, f=[1, 1]):
+    """Формирует последовательность чисел Фибоначчи по правилу:
+    первые два числа равны 1 и 1, а каждое следующе значение
+    равно сумме двух предыдущих.
+    """
+    if n <= 2:
+        return f if n == 2 else [n]
     f.append(f[-2] + f[-1])
-    return fib_rec(N - 1, f)
+    return fib_rec(n - 1, f)
 
 
 if __name__ == '__main__':
