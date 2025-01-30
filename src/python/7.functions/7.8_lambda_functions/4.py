@@ -16,6 +16,6 @@ Sample Output:
 True
 """
 
-s = input()
-in_str = lambda chars, string: chars in string
-print(in_str('ra', s))
+S = input()
+is_chars_in_string = lambda chars, string: chars in string
+print(is_chars_in_string('ra', S))

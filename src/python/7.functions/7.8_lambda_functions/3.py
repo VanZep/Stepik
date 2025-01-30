@@ -13,5 +13,5 @@ Sample Output:
 """
 
 X = float(input())
-module = lambda x: abs(x)
-print(module(X))
+abs_number = lambda x: abs(x)
+print(abs_number(X))
