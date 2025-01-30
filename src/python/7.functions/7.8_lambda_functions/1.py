@@ -3,6 +3,6 @@
 в квадрат. Присвойте эту функцию переменной get_sq.
 """
 
-x = 2
+X = 2
 get_sq = lambda x: x ** 2
-print(get_sq(x))
+print(get_sq(X))
