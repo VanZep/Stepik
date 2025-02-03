@@ -25,6 +25,18 @@ d = [
 
 def get_line_list_1(d, a=[]):
     """Создаёт одномерный список a из значений элементов списка d.
+    2-ое решение.
+    """
+    for item in d:
+        if isinstance(item, list):
+            get_line_list_1(item)
+        else:
+            a.append(item)
+    return a
+
+
+def get_line_list_2(d, a=[]):
+    """Создаёт одномерный список a из значений элементов списка d.
     1-ое решение.
     """
     if d:
@@ -32,19 +44,7 @@ def get_line_list_1(d, a=[]):
             d.extend(d.pop(0))
         else:
             a.append(d.pop(0))
-        return get_line_list_1(d, a)
-    return a
-
-
-def get_line_list_2(d, a=[]):
-    """Создаёт одномерный список a из значений элементов списка d.
-    2-ое решение.
-    """
-    for item in d:
-        if isinstance(item, list):
-            get_line_list_2(item)
-        else:
-            a.append(item)
+        return get_line_list_2(d, a)
     return a
 
 
