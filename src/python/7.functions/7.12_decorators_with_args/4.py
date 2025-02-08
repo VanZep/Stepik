@@ -34,5 +34,4 @@ def get_list(string):
 
 
 if __name__ == '__main__':
-    print(get_list('1 2 3 4 5'))
-    print(get_list.__name__, get_list.__doc__, sep='\n')
+    print(get_list('1 2 3 4 5'), get_list.__name__, get_list.__doc__, sep='\n')
