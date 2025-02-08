@@ -41,7 +41,7 @@ t = {
 }
 
 
-def one_hyphen(func):
+def one_dash(func):
     """Декоратор. Превращает несколько идущих подряд дефисов, в один."""
 
     def wrapper(*args, **kwargs):
@@ -53,9 +53,11 @@ def one_hyphen(func):
     return wrapper
 
 
-@one_hyphen
+@one_dash
 def transliter(string):
-    """Преобразовывает в строке кириллические символы в латиницу."""
+    """Преобразовывает в строке кириллические символы в латиницу
+    и переводит в нижний регистр.
+    """
     result_str = ''
     for char in string.strip().lower():
         if char in ' :;.,_':
