@@ -4,6 +4,9 @@
 Присвойте этот генератор переменной gen.
 """
 
-gen = (x for x in range(2, 10001))
-for i in range(10001 - 2):
+
+START = 2
+END = 10001
+gen = (x for x in range(START, END))
+for i in range(END - START):
     print(next(gen))
