@@ -18,5 +18,4 @@ Sample Output:
 
 a, b = map(int, input().split())
 gen = (abs(x) for x in range(a, b + 1))
-for i in range(5):
-    print(next(gen))
+print(*(next(gen) for _ in range(5)), sep='\n')

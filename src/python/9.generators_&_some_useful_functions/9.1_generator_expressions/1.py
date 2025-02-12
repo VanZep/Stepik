@@ -8,5 +8,4 @@
 START = 2
 END = 10001
 gen = (x for x in range(START, END))
-for i in range(END - START):
-    print(next(gen))
+print(*(next(gen) for _ in range(END - START)))
