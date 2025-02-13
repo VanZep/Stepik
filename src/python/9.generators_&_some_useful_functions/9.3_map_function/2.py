@@ -12,5 +12,7 @@ Sample Output:
 5 6 8 11 10 0
 """
 
-lst = list(map(abs, map(int, input().split())))
-print(*lst)
+lst_1 = list(map(abs, map(int, input().split())))
+print(*lst_1)
+lst_2 = list(map(lambda x: abs(int(x)), input().split()))
+print(*lst_2)
