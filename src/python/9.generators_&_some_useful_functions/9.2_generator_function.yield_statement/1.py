@@ -35,4 +35,5 @@ def get_sum(total):
 
 if __name__ == '__main__':
     N = int(input())
-    print(*get_sum(N))
+    gen = get_sum(N)
+    print(*(next(gen) for _ in range(N)))
