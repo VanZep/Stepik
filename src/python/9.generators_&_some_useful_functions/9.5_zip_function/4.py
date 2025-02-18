@@ -15,12 +15,12 @@ Sample Output:
 Владивосток Лондон Калининград
 """
 
-# # 1-ое решение
+# 1-ое решение
 cities_lst = input().split()
 for city in zip(*[cities_lst[i::3] for i in range(3)]):
     print(*city)
 
-# # 2-ое решение
+# 2-ое решение
 cities_lst = iter(input().split())
 for city in zip(*[cities_lst] * 3):
     print(*city)
