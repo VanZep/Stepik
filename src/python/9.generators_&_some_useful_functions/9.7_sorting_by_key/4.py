@@ -65,9 +65,9 @@ t_sorted = tuple(
 print(t_sorted)
 
 # 3-е решение
-headers = 'Имя;Зачет;Оценка;Номер'
+headers = tuple('Имя;Зачет;Оценка;Номер'.split(';'))
 t = tuple(tuple(
     int(el) if el.isdigit() else el for el in st.split(';')
 ) for st in lst_in)
-t_sorted = tuple(zip(*sorted(zip(*t), key=lambda x: headers.find(x[0]))))
+t_sorted = tuple(zip(*sorted(zip(*t), key=lambda x: headers.index(x[0]))))
 print(t_sorted)
