@@ -12,4 +12,6 @@ Sample Output:
 True
 """
 
-print(any(map(lambda x: float(x) < 0, input().split())))
+float_nums = tuple(map(float, input().split()))
+print(any(map(lambda x: x < 0, float_nums)))
+print(any(x < 0 for x in float_nums))

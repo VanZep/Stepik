@@ -14,3 +14,4 @@ True
 
 nums = list(map(int, input().split()))
 print(all(map(lambda x: x % 2 == 0, nums)))
+print(all(num % 2 == 0 for num in nums))
