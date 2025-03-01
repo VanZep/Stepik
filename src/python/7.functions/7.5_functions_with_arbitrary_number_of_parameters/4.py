@@ -25,23 +25,71 @@ Sample Input:
 0 1 0 1 0
 0 0 0 0 0
 
+1 0 0 0 0
+0 0 1 0 0
+0 0 1 0 0
+0 1 0 1 0
+0 0 0 0 0
+
+1 1 1 1 1
+2 2 2 2 2
+3 3 3 3 3
+4 4 4 4 4
+5 5 5 5 5
+1 1 1 1 1
+
 Sample Output:
 True
 """
 
 import sys
+import copy
 
 lines = sys.stdin.readlines()
 lst2D = [list(map(int, i.strip().split())) for i in lines]
 
 
-def verify(lst):
+def verify_1(lst):
+    """1-ое решение."""
     for i in range(len(lst) - 1):
         for j in range(len(lst[0]) - 1):
-            if lst[i][j] + lst[i+1][j] + lst[i][j+1] + lst[i+1][j+1] > 1:
+            if lst[i][j] + lst[i + 1][j] + lst[i][j + 1] + lst[i + 1][
+                j + 1] > 1:
                 return False
     return True
 
 
+def expand_list(lst_in):
+    lst = copy.deepcopy(lst_in)
+    lst.append(N * [0])
+    lst.insert(0, N * [0])
+    for row in lst:
+        row.insert(0, 0)
+        row.append(0)
+    return lst
+
+
+def is_isolate(i, j):
+    summ = sum((
+        sum(expanded_lst2D[i][j:j + 2]),
+        sum(expanded_lst2D[i + 1][j:j + 2]),
+        sum(expanded_lst2D[i + 2][j:j + 2])
+    ))
+    return summ == 1
+
+
+def verify_2(lst):
+    """2-ое решение."""
+    for i in range(N):
+        for j in range(N):
+            if lst[i][j] == 1:
+                if not is_isolate(i, j):
+                    return False
+    return True
+
+
 if __name__ == '__main__':
-    print(verify(lst2D))
+    N = len(lst2D)
+    print(verify_1(lst2D))
+    expanded_lst2D = expand_list(lst2D)
+    print(verify_2(lst2D))
