@@ -70,12 +70,11 @@ def expand_list(lst_in):
 
 
 def is_isolate(i, j):
-    summ = sum((
-        sum(expanded_lst2D[i][j:j + 2]),
-        sum(expanded_lst2D[i + 1][j:j + 2]),
-        sum(expanded_lst2D[i + 2][j:j + 2])
-    ))
-    return summ == 1
+    return sum(
+        expanded_lst2D[i][j:j + 2]
+        + expanded_lst2D[i + 1][j:j + 2]
+        + expanded_lst2D[i + 2][j:j + 2]
+    ) == 1
 
 
 def verify_2(lst):
