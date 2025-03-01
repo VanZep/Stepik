@@ -71,9 +71,9 @@ def expand_list(lst_in):
 
 def is_isolate(i, j):
     return sum(
-        expanded_lst2D[i][j:j + 2]
-        + expanded_lst2D[i + 1][j:j + 2]
-        + expanded_lst2D[i + 2][j:j + 2]
+        expanded_lst2D[i][j:j + 3]
+        + expanded_lst2D[i + 1][j:j + 3]
+        + expanded_lst2D[i + 2][j:j + 3]
     ) == 1
 
 
