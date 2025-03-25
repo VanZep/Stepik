@@ -29,10 +29,12 @@ Sample Output:
 
 p = [0] * 10
 count = 0
+
 while 5 > count:
     i = int(input())
     if p[i] == 1:
         continue
     p[i] = 1
     count += 1
+
 print(*p)
