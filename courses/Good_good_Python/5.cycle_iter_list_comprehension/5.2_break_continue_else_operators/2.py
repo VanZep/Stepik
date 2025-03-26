@@ -22,9 +22,9 @@ summ = 1
 
 while True:
     x = int(input())
-    if 0 == x:
+    if x == 0:
         break
-    if 0 > x:
+    if x < 0:
         continue
     summ *= x
 
