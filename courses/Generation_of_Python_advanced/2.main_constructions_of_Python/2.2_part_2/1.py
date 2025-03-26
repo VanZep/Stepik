@@ -54,7 +54,6 @@ n = int(input())
 
 for i in range(n):
     dot_x, dot_y = map(int, input().split())
-    print([dot_x, dot_y])
     if dot_x > 0 and dot_y > 0:
         count[0] += 1
     elif dot_x < 0 and dot_y > 0:
