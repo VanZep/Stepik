@@ -34,8 +34,22 @@ Sample Output 3:
 1
 """
 
-nums = input().split()
-for i in range(0, len(nums) - 1, 2):
-    print(nums[i])
-    nums[i], nums[i + 1] = nums[i + 1], nums[i]
-print(*nums)
+
+def func_1():
+    """1-ое решение."""
+    nums = input().split()
+    for i in range(0, len(nums) - 1, 2):
+        nums[i], nums[i + 1] = nums[i + 1], nums[i]
+    print(*nums)
+
+
+def func_2():
+    """2-ое решение."""
+    nums = input().split()
+    nums[:-1:2], nums[1::2] = nums[1::2], nums[:-1:2]
+    print(*nums)
+
+
+if __name__ == '__main__':
+    func_1()
+    func_2()
