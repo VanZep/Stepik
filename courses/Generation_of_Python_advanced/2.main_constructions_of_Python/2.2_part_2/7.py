@@ -43,9 +43,9 @@ Sample Output 3:
 
 def func_1():
     """1-ое решение."""
-    timur_victory_conditions = [
+    timur_victory_conditions = (
         'каменьножницы', 'ножницыбумага', 'бумагакамень'
-    ]
+    )
     timur_choiсe = input()
     ruslan_choice = input()
 
@@ -60,7 +60,7 @@ def func_1():
 def func_2():
     """2-ое решение."""
     choices = ('камень', 'ножницы', 'бумага')
-    results = ['ничья', 'Руслан', 'Тимур']
+    results = ('ничья', 'Руслан', 'Тимур')
     timur_choice = input()
     ruslan_choice = input()
     difference = choices.index(timur_choice) - choices.index(ruslan_choice)

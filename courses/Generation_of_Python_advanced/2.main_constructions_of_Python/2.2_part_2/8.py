@@ -43,19 +43,38 @@ Sample Output 3:
 ничья
 """
 
-winners = {
-    'камень': ['ящерица', 'ножницы'],
-    'ящерица': ['Спок', 'бумага'],
-    'Спок': ['ножницы', 'камень'],
-    'ножницы': ['бумага', 'ящерица'],
-    'бумага': ['камень', 'Спок']
-}
-timur_choiсe = input()
-ruslan_choice = input()
 
-if ruslan_choice in winners[timur_choiсe]:
-    print('Тимур')
-elif timur_choiсe == ruslan_choice:
-    print('ничья')
-else:
-    print('Руслан')
+def func_1():
+    """1-ое решение."""
+    losers = {
+        'камень': ['ящерица', 'ножницы'],
+        'ящерица': ['Спок', 'бумага'],
+        'Спок': ['ножницы', 'камень'],
+        'ножницы': ['бумага', 'ящерица'],
+        'бумага': ['камень', 'Спок']
+    }
+    timur_choiсe = input()
+    ruslan_choice = input()
+
+    if ruslan_choice in losers[timur_choiсe]:
+        print('Тимур')
+    elif timur_choiсe == ruslan_choice:
+        print('ничья')
+    else:
+        print('Руслан')
+
+
+def func_2():
+    """2-ое решение."""
+    choices = ('камень', 'ящерица', 'Спок', 'ножницы', 'бумага')
+    results = ('ничья', 'Руслан', 'Тимур', 'Руслан', 'Тимур')
+    timur_choice = input()
+    ruslan_choice = input()
+    difference = choices.index(timur_choice) - choices.index(ruslan_choice)
+    result = results[difference]
+    print(result)
+
+
+if __name__ == '__main__':
+    func_1()
+    func_2()
