@@ -36,16 +36,35 @@ Sample Output 3:
 6
 """
 
-n = int(input())
-k = int(input())
-nums = list(range(1, n + 1))
-idx = 1
 
-while len(nums) > 1:
-    if idx % k == 0:
-        del nums[0]
-        idx = 1
-    nums.append(nums.pop(0))
-    idx += 1
+def func_1():
+    """1-ое решение."""
+    n = int(input())
+    k = int(input())
+    nums = list(range(1, n + 1))
+    idx = 1
 
-print(nums[0])
+    while len(nums) > 1:
+        if idx % k == 0:
+            del nums[0]
+            idx = 1
+        nums.append(nums.pop(0))
+        idx += 1
+
+    print(nums[0])
+
+
+def func_2():
+    """2-ое решение."""
+    n = int(input())
+    k = int(input())
+
+    res = 0
+    for i in range(1, n + 1):
+        res = (res + k) % i
+    print(res + 1)
+
+
+if __name__ == '__main__':
+    func_1()
+    func_2()
