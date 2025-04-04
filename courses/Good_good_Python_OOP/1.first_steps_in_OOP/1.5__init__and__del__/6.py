@@ -82,6 +82,3 @@ mb = MotherBoard(
     Memory('Kingstone', 16)
 )
 print(mb.get_config())
-# print(CPU.__dict__)
-# print(Memory.__dict__)
-# print(mb.__dict__)
