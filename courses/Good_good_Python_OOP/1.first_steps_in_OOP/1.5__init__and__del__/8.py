@@ -55,14 +55,14 @@ class ListObject:
 lst_in = list(map(str.strip, sys.stdin.readlines()))
 
 head_obj = ListObject(lst_in[0])
-obj = head_obj
+current_obj = head_obj
 linked_list = [head_obj]
 
 for i in lst_in[1:]:
     next_obj = ListObject(i)
-    obj.link(next_obj)
-    obj = next_obj
-    linked_list.append(obj)
+    current_obj.link(next_obj)
+    current_obj = next_obj
+    linked_list.append(current_obj)
 
 for i in linked_list:
     print(i.data, i.next_obj)
