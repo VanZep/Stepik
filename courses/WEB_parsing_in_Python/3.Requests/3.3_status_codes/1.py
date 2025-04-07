@@ -27,6 +27,7 @@ PAGE_COUNT = 200
 URL = 'https://parsinger.ru/3.3/2/'
 status_codes_summ = 0
 start_time = time.time()
+
 with requests.Session() as session:
     for page_number in range(1, PAGE_COUNT + 1):
         try:
