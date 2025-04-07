@@ -37,7 +37,7 @@ with requests.Session() as session:
         except requests.Timeout:
             print(f'Слишком долгое ожидание страницы номер {page_number}')
         except requests.RequestException as e:
-            print(f"Произошла ошибка: {e}")
+            print(f'Произошла ошибка: {e}')
 
 print(f'Время - {time.time() - start_time}')
 print(f'Сумма статус кодов - {status_codes_summ}')
