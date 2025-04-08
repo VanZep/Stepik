@@ -50,13 +50,20 @@ Sample Output 4:
 [1, 3, 3, 1]
 """
 
-n = int(input())
-last_lst = []
 
-for i in range(n + 1):
-    lst = [1] * (i + 1)
-    for j in range(1, i):
-        lst[j] = last_lst[j - 1] + last_lst[j]
-    last_lst = lst
+def pascal(n):
+    """Возвращает строку номер n треугольника Паскаля в виде списка."""
+    last_lst = []
 
-print(lst)
+    for i in range(n + 1):
+        lst = [1] * (i + 1)
+        for j in range(1, i):
+            lst[j] = last_lst[j - 1] + last_lst[j]
+        last_lst = lst
+
+    return lst
+
+
+if __name__ == '__main__':
+    n = int(input('Введите номер строки, начиная с нуля: '))
+    print(pascal(n))
