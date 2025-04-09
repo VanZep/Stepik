@@ -33,14 +33,14 @@ try:
 except (requests.exceptions.HTTPError, requests.RequestException) as err:
     print(f"Произошла ошибка: {err}")
 
-data = response.json()
-min_temp = 100
-date = None
+weather_data = response.json()
+min_temp_data = min(
+    weather_data, key=lambda x: int(x['Температура воздуха'][:-2])
+)
 
-for item in data:
-    temp = int(item['Температура воздуха'].rstrip('°C'))
-    if temp < min_temp:
-        min_temp = temp
-        date = item['Дата']
-
-print(date)
+print(
+    'Минимальная температура воздуха '
+    f'({min_temp_data["Температура воздуха"]}) '
+    f'была зафиксирована {min_temp_data["Дата"]} '
+    f'в городе {min_temp_data["Город"]}'
+)
