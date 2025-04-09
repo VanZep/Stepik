@@ -134,11 +134,11 @@ name_img = [
 with requests.Session() as session:
     max_size = 0
     index_img = 0
-    for i in range(len(name_img)):
+    for i, img in enumerate(name_img):
         try:
-            response = session.get(url=URL + name_img[i], timeout=1)
+            response = session.get(url=URL + img, timeout=0.1)
         except requests.Timeout:
-            print(f'Слишком долгое ожидание! Изображение {name_img[i]}')
+            print(f'Слишком долгое ожидание! Изображение {img}')
         except requests.RequestException as e:
             print(f'Произошла ошибка: {e}')
         content_size = int(response.headers.get('Content-Length'))
