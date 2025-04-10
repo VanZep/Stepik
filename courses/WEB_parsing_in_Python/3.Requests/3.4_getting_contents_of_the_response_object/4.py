@@ -38,7 +38,6 @@ response.json().
 """
 
 import requests
-from pprint import pprint
 
 API_ENDPOINT = 'https://parsinger.ru/3.4/3/dialog.json'
 
@@ -48,22 +47,27 @@ try:
 except (requests.exceptions.HTTPError, requests.RequestException) as err:
     print(f"Произошла ошибка: {err}")
 
-message = response.json()
-message_count = {}
-message_username = message['username']
-message_count[message_username] = 1
-message_comments = message['comments']
-while message_comments:
-    
-    for comment in message_comments:
-        if comment['comments']:
-            message_username = comment['username']
-            if message_username not in message_count:
-                message_count[message_username] = 1
-            else:
-                message_count[message_username] += 1
+chat = response.json()
 
-print(message_count)
 
-# pprint(data['username'])
-# while data['comments']:
+def get_count_of_user_messages(chat):
+    comments = chat['comments']
+    for comment in comments:
+        comments = comment['comments']
+        if comments:
+            get_count_of_user_messages(comment)
+        username = comment['username']
+        count_of_user_messages[username] = count_of_user_messages.get(
+            username, 0
+        ) + 1
+
+    return count_of_user_messages
+
+
+count_of_user_messages = {chat['username']: 1}
+count_of_user_messages.update(get_count_of_user_messages(chat))
+sorted_count_of_user_messages = dict(sorted(
+    count_of_user_messages.items(),
+    key=lambda x: (-x[1], x[0])
+))
+print(sorted_count_of_user_messages)
