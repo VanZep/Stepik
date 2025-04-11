@@ -19,15 +19,15 @@ Sample Output:
 
 tel = input()
 
-if tel[0:3] == (
-        '+7(' and
-        tel[6] == ')' and
-        tel[10] == '-' and
-        tel[13] == '-' and
-        tel[3:6].isdigit() and
-        tel[7:10].isdigit() and
-        tel[11:13].isdigit() and
-        tel[14:].isdigit()
+if (
+    tel[0:3] == '+7(' and
+    tel[6] == ')' and
+    tel[10] == '-' and
+    tel[13] == '-' and
+    tel[3:6].isdigit() and
+    tel[7:10].isdigit() and
+    tel[11:13].isdigit() and
+    tel[14:].isdigit()
 ):
     print('ДА')
 else:
