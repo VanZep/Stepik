@@ -17,8 +17,6 @@ unspaced_text = 'Тексттегасчетнойдлинойбезсимвол�
 Суммировать значения атрибутов id и class.
 """
 
-from pprint import pprint
-
 from bs4 import BeautifulSoup
 
 html = '''<!DOCTYPE html>
