@@ -31,11 +31,7 @@ def get_response(url):
 def main():
     html = get_response(URL)
     soup = BeautifulSoup(html, 'html.parser')
-    table_rows = soup.find('table').find_all('tr')
-    unique_values = set()
-    for row in table_rows[1:]:
-        row_values = {float(tag.text) for tag in row.select('td')}
-        unique_values.update(row_values)
+    unique_values = {float(tag.text) for tag in soup.select('td')}
 
     print(sum(unique_values))
 
