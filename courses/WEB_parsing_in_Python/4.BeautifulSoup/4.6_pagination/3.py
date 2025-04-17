@@ -14,6 +14,7 @@
 товаров.
 Представление итоговой общей стоимости в качестве ответа.
 """
+
 import time
 
 import requests
@@ -34,70 +35,69 @@ def get_soup(html):
     return BeautifulSoup(html, 'html.parser')
 
 
-def get_response(url):
-    try:
-        response = requests.get(url=url, headers=get_headers())
-        response.raise_for_status()
-        response.encoding = 'utf-8'
+def get_links(selector_1, selector_2, *urls):
+    with requests.Session() as session:
+        links = []
+        for url in urls:
+            try:
+                response = session.get(url=url, headers=get_headers())
+                response.raise_for_status()
+                response.encoding = 'utf-8'
+                soup = get_soup(response.text)
+                tags = soup.select_one(selector_1).select(selector_2)
+                tag_links = [tag.get('href') for tag in tags]
+                links.extend(tag_links)
 
-        return response.text
-    except requests.RequestException as error:
-        print(f"Произошла ошибка: {error}")
+            except requests.RequestException as error:
+                print(f"Произошла ошибка: {error}")
+
+    return links
 
 
 def get_navigation_links(url):
-    html = get_response(url=url)
-    soup = get_soup(html)
-    link_tags = soup.find(class_='nav_menu').find_all('a')
-
-    return [tag.get('href') for tag in link_tags]
+    return get_links('.nav_menu', 'a', url)
 
 
 def get_pagination_links(category_links):
-    pagination_links = []
-    for link in category_links:
-        url = URL + link
-        html = get_response(url=url)
-        soup = get_soup(html)
-        link_tags = soup.find(class_='pagen').find_all('a')
-        links = [tag.get('href') for tag in link_tags]
-        pagination_links.extend(links)
-
-    return pagination_links
+    urls = (URL + link for link in category_links)
+    return get_links('.pagen', 'a', *urls)
 
 
 def get_item_links(pagination_links):
-    item_links = []
-    for link in pagination_links:
-        url = URL + link
-        html = get_response(url=url)
-        soup = get_soup(html)
-        link_tags = soup.find_all(class_='name_item')
-        links = [tag.get('href') for tag in link_tags]
-        item_links.extend(links)
-
-    return item_links
+    urls = (URL + link for link in pagination_links)
+    return get_links('*', '.name_item', *urls)
 
 
 def get_total_price(item_links):
-    total_price = 0
-    for link in item_links:
-        url = URL + link
-        html = get_response(url=url)
-        soup = get_soup(html)
-        price = int(soup.find(id='price').text.split()[0])
-        stock = int(soup.find(id='in_stock').text.split()[-1])
-        total_price += price * stock
+    with requests.Session() as session:
+        total_price = 0
+        for link in item_links:
+            url = URL + link
+            try:
+                response = session.get(url=url, headers=get_headers())
+                response.raise_for_status()
+                response.encoding = 'utf-8'
+                soup = get_soup(response.text)
+                price = int(soup.find(id='price').text.split()[0])
+                stock = int(soup.find(id='in_stock').text.split()[-1])
+                total_price += price * stock
+
+            except requests.RequestException as error:
+                print(f"Произошла ошибка: {error}")
 
     return total_price
 
 
 def main():
-    category_links = get_navigation_links(START_URL)
-    pagination_links = get_pagination_links(category_links)
-    item_links = get_item_links(pagination_links)
-    total_price = get_total_price(item_links)
-    print(total_price)
+    try:
+        category_links = get_navigation_links(START_URL)
+        pagination_links = get_pagination_links(category_links)
+        item_links = get_item_links(pagination_links)
+        total_price = get_total_price(item_links)
+        print(total_price)
+
+    except Exception as error:
+        print(f"Произошла ошибка: {error}")
 
 
 if __name__ == '__main__':
