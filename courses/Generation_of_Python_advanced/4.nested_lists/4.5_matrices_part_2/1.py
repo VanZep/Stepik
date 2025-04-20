@@ -48,6 +48,7 @@ Sample Output 3:
 n = int(input())
 m = int(input())
 mult = [[i * j for j in range(m)] for i in range(n)]
+
 for row in mult:
     for num in row:
         print(str(num).ljust(3), end='')
