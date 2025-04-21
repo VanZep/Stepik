@@ -54,7 +54,10 @@ import requests
 from bs4 import BeautifulSoup
 
 URL = 'https://parsinger.ru/4.8/6/index.html'
-col_names = ['Марка Авто', 'Год выпуска', 'Тип двигателя', 'Стоимость авто']
+BRAND = 'Марка Авто'
+YEAR = 'Год выпуска'
+ENGINE = 'Тип двигателя'
+PRICE = 'Стоимость авто'
 
 
 def get_response(url):
@@ -68,26 +71,27 @@ def get_response(url):
         print(f"Произошла ошибка: {error}")
 
 
-def get_col_numbers(headers_row, col_names):
+def get_col_numbers(headers_row):
     headers = [tag.text for tag in headers_row.find_all('th')]
 
-    return {name: headers.index(name) for name in col_names}
+    return {name: headers.index(name) for name in (BRAND, YEAR, ENGINE, PRICE)}
 
 
 def get_filtered_cars(car_rows, col_numbers):
     filtered_cars = []
+
     for row in car_rows:
         car = [tag.text for tag in row.find_all('td')]
         if (
-                int(car[col_numbers[col_names[1]]]) >= 2005 and
-                car[col_numbers[col_names[2]]] == 'Бензиновый' and
-                int(car[col_numbers[col_names[3]]]) <= 4_000_000
+                int(car[col_numbers[YEAR]]) >= 2005 and
+                car[col_numbers[ENGINE]] == 'Бензиновый' and
+                int(car[col_numbers[PRICE]]) <= 4_000_000
         ):
             filtered_cars.append({
-                col_names[0]: car[col_numbers[col_names[0]]],
-                col_names[1]: int(car[col_numbers[col_names[1]]]),
-                col_names[2]: car[col_numbers[col_names[2]]],
-                col_names[3]: int(car[col_numbers[col_names[3]]])
+                BRAND: car[col_numbers[BRAND]],
+                YEAR: int(car[col_numbers[YEAR]]),
+                ENGINE: car[col_numbers[ENGINE]],
+                PRICE: int(car[col_numbers[PRICE]])
             })
 
     return filtered_cars
@@ -97,9 +101,9 @@ def main():
     html = get_response(URL)
     soup = BeautifulSoup(html, 'html.parser')
     table_rows = soup.find_all('tr')
-    col_numbers = get_col_numbers(table_rows[0], col_names)
+    col_numbers = get_col_numbers(table_rows[0])
     filtered_cars = get_filtered_cars(table_rows[1:], col_numbers)
-    sorted_cars = sorted(filtered_cars, key=lambda car: car.get(col_names[3]))
+    sorted_cars = sorted(filtered_cars, key=lambda car: car[PRICE])
     json_cars = json.dumps(sorted_cars, indent=4, ensure_ascii=False)
     print(json_cars)
 
