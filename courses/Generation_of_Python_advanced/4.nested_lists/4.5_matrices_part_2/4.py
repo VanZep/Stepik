@@ -39,10 +39,10 @@ Sample Output 3:
 NO
 """
 
+# 1-ое решение
 n = int(input())
 matrix = [input().split() for _ in range(n)]
 is_symmetric = True
-
 
 for i in range(n):
     for j in range(n):
@@ -52,4 +52,10 @@ for i in range(n):
     if not is_symmetric:
         break
 
-print(['NO', 'YES'][is_symmetric])
+print(('NO', 'YES')[is_symmetric])
+
+
+# 2-ое решение
+n = int(input())
+matrix = [tuple(input().split()) for _ in range(n)]
+print(('NO', 'YES')[matrix == list(zip(*matrix))])
