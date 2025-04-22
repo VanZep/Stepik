@@ -29,13 +29,14 @@ CSV_HEADERS = (
 )
 
 
-def get_response(url):
+def get_soup(url):
     try:
         response = requests.get(url)
         response.raise_for_status()
         response.encoding = 'utf-8'
 
-        return response.text
+        return BeautifulSoup(response.text, 'lxml')
+
     except requests.RequestException as error:
         print(f"Произошла ошибка: {error}")
 
@@ -47,8 +48,7 @@ def create_csv_with_headers(headers):
 
 
 def get_pagination_links(url):
-    html = get_response(url)
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = get_soup(url)
     return [tag.get('href') for tag in soup.find(class_='pagen').find_all('a')]
 
 
@@ -59,8 +59,7 @@ def get_data(links):
 
     for link in links:
         url = URL + link
-        html = get_response(url)
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = get_soup(url)
         names += [x.text.strip() for x in soup.find_all(class_='name_item')]
         prices += [x.text for x in soup.find_all(class_='price')]
         descriptions += [
