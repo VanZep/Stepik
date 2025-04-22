@@ -45,6 +45,7 @@ Sample Output 3:
 3 1
 4 2
 """
+
 n = int(input())
 matrix = [input().split() for _ in range(n)]
 
