@@ -56,4 +56,3 @@ class Loader:
 
 
 res = Loader.parse_format("1, 2, 3, -5, 10", Factory)
-print(res)
