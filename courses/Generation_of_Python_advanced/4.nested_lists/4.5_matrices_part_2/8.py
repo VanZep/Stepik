@@ -43,13 +43,14 @@ Sample Output 2:
 . . . . * . * .
 """
 
+ROWS = '87654321'
+COLS = 'abcdefgh'
+
 cell = input()
-rows = '87654321'
-cols = 'abcdefgh'
-size = len(rows)
-x = rows.index(cell[1])
-y = cols.index(cell[0])
-board = [['.' for _ in range(size)] for _ in range(size)]
+size = len(ROWS)
+x = ROWS.index(cell[1])
+y = COLS.index(cell[0])
+board = [['.'] * size for _ in range(size)]
 board[x][y] = 'N'
 
 for i in range(size):
