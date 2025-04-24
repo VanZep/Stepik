@@ -44,36 +44,6 @@ Sample Output 3:
 YES
 """
 
-# flag = True
-# n = int(input())
-# matrix = [tuple(map(int, input().split())) for _ in range(n)]
-# summ = sum(matrix[0])
-
-# major_diag_summ = 0
-# secondary_diag_summ = 0
-# unique_nums = set()
-
-# for i in range(n):
-#     if flag:
-#         unique_nums.update(matrix[i])
-#         if sum(matrix[i]) != summ or sum(list(zip(*matrix))[i]) != summ:
-#             flag = False
-#             break
-#     for j in range(n):
-#         if matrix[i][j] < 1 or matrix[i][j] > n**2:
-#             flag = False
-#             break
-#         if i == j:
-#             major_diag_summ += matrix[i][j]
-#         if n - i - 1 == j:
-#             secondary_diag_summ += matrix[i][j]
-
-# if major_diag_summ != secondary_diag_summ != summ or len(unique_nums) != n**2:
-#     flag = False
-
-# print(['NO', 'YES'][flag])
-
-
 n = int(input())
 matrix = [tuple(map(int, input().split())) for _ in range(n)]
 summ = sum(matrix[0])
