@@ -15,5 +15,4 @@ Sample Output:
 
 cities = list(map(str, input().split()))
 iterator = iter(cities)
-print(next(iterator))
-print(next(iterator))
+print(next(iterator), next(iterator), sep='\n')
