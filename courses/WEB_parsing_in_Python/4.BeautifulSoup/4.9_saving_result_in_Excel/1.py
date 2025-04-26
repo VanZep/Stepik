@@ -46,26 +46,6 @@ def get_pagination_links(url):
     return [tag.get('href') for tag in soup.find(class_='pagen').find_all('a')]
 
 
-# def get_data(links):
-#     names = []
-#     prices = []
-#     descriptions = []
-#
-#     for link in links:
-#         url = URL + link
-#         soup = get_soup(url)
-#         names += [x.text.strip() for x in soup.find_all(class_='name_item')]
-#         prices += [x.text for x in soup.find_all(class_='price')]
-#         descriptions += [
-#             x.text.strip().split('\n') for x in
-#             soup.find_all(class_='description')
-#         ]
-#
-#     z = [[x.split(':')[-1].strip() for x in desc] for desc in descriptions]
-#
-#     return zip(names, *zip(*z), prices)
-
-
 def get_data(links):
     data = []
 
