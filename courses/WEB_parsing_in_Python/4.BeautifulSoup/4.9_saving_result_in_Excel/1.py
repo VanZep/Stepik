@@ -41,57 +41,59 @@ def get_soup(url):
         print(f"Произошла ошибка: {error}")
 
 
-def create_csv_with_headers(headers):
-    with open('hdd.csv', 'w', encoding='utf-8-sig', newline='') as file:
-        writer = csv.writer(file, delimiter=';')
-        writer.writerow(headers)
-
-
 def get_pagination_links(url):
     soup = get_soup(url)
     return [tag.get('href') for tag in soup.find(class_='pagen').find_all('a')]
 
 
+# def get_data(links):
+#     names = []
+#     prices = []
+#     descriptions = []
+#
+#     for link in links:
+#         url = URL + link
+#         soup = get_soup(url)
+#         names += [x.text.strip() for x in soup.find_all(class_='name_item')]
+#         prices += [x.text for x in soup.find_all(class_='price')]
+#         descriptions += [
+#             x.text.strip().split('\n') for x in
+#             soup.find_all(class_='description')
+#         ]
+#
+#     z = [[x.split(':')[-1].strip() for x in desc] for desc in descriptions]
+#
+#     return zip(names, *zip(*z), prices)
+
+
 def get_data(links):
-    names = []
-    prices = []
-    descriptions = []
+    data = []
 
     for link in links:
         url = URL + link
         soup = get_soup(url)
-        names += [x.text.strip() for x in soup.find_all(class_='name_item')]
-        prices += [x.text for x in soup.find_all(class_='price')]
-        descriptions += [
+        names = [x.text.strip() for x in soup.find_all(class_='name_item')]
+        prices = [x.text for x in soup.find_all(class_='price')]
+        descriptions = [
             x.text.strip().split('\n') for x in
             soup.find_all(class_='description')
         ]
+        descr_info = zip(*(
+            [x.split(':')[-1].strip() for x in desc] for desc in descriptions
+        ))
+        data.extend(zip(*[names, *descr_info, prices]))
 
-    brands = []
-    form_factors = []
-    containers = []
-    buffer_memory_sizes = []
-
-    for row in descriptions:
-        brands.append(row[0].split(':')[1].strip())
-        form_factors.append(row[1].split(':')[1].strip())
-        containers.append(row[2].split(':')[1].strip())
-        buffer_memory_sizes.append(row[3].split(':')[1].strip())
-
-    return zip(
-        names, brands, form_factors, containers, buffer_memory_sizes, prices
-    )
+    return data
 
 
 def write_csv(data):
-    with open('hdd.csv', 'a', encoding='utf-8-sig', newline='') as file:
+    with open('hdd.csv', 'w', encoding='utf-8-sig', newline='') as file:
         writer = csv.writer(file, delimiter=';')
-        for row in data:
-            writer.writerow(row)
+        writer.writerow(CSV_HEADERS)
+        writer.writerows(data)
 
 
 def main():
-    create_csv_with_headers(CSV_HEADERS)
     pagination_links = get_pagination_links(START_URL)
     data = get_data(pagination_links)
     write_csv(data)

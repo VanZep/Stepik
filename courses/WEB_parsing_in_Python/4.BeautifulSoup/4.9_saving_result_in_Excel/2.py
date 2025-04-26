@@ -46,12 +46,6 @@ def get_soup(url):
         print(f"Произошла ошибка: {error}")
 
 
-def create_csv_with_headers(headers):
-    with open('watch.csv', 'w', encoding='utf-8-sig', newline='') as file:
-        writer = csv.writer(file, delimiter=';')
-        writer.writerow(headers)
-
-
 def get_pagination_links(url):
     soup = get_soup(url)
     return [tag.get('href') for tag in soup.find(class_='pagen').find_all('a')]
@@ -71,60 +65,32 @@ def get_item_links(links):
 
 
 def get_data(links):
-    names = []
-    articles = []
-    brands = []
-    models = []
-    types = []
-    displays = []
-    bodies = []
-    bracelets = []
-    sizes = []
-    sites = []
-    stocks = []
-    prices = []
-    old_prices = []
-    item_urls = []
+    data = []
 
     for link in links:
         url = URL + link
         soup = get_soup(url)
-        names.append(soup.find(id='p_header').text.strip())
-        articles.append(
-            soup.find(class_='article').text.split(':')[-1].strip()
-        )
-        brands.append(soup.find(id='brand').text.split(':')[-1].strip())
-        models.append(soup.find(id='model').text.split(':')[-1].strip())
-        types.append(soup.find(id='type').text.split(':')[-1].strip())
-        displays.append(soup.find(id='display').text.split(':')[-1].strip())
-        bodies.append(
-            soup.find(id='material_frame').text.split(':')[-1].strip()
-        )
-        bracelets.append(
-            soup.find(id='material_bracer').text.split(':')[-1].strip()
-        )
-        sizes.append(soup.find(id='size').text.split(':')[-1].strip())
-        sites.append(soup.find(id='site').text.split(':')[-1].strip())
-        stocks.append(soup.find(id='in_stock').text.split(':')[-1].strip())
-        prices.append(soup.find(id='price').text.strip())
-        old_prices.append(soup.find(id='old_price').text.strip())
-        item_urls.append(url)
+        name = soup.find(id='p_header').text.strip()
+        price = soup.find(id='price').text.strip()
+        old_price = soup.find(id='old_price').text.strip()
+        description = [
+            desc.split(':')[-1].strip() for desc in
+            soup.find(class_='description').text.strip().split('\n')
+            if ':' in desc
+        ]
+        data.append([name, *description, price, old_price, url])
 
-    return zip(
-        names, articles, brands, models, types, displays, bodies, bracelets,
-        sizes, sites, stocks, prices, old_prices, item_urls
-    )
+    return data
 
 
 def write_csv(data):
-    with open('watch.csv', 'a', encoding='utf-8-sig', newline='') as file:
+    with open('watch.csv', 'w', encoding='utf-8-sig', newline='') as file:
         writer = csv.writer(file, delimiter=';')
-        for row in data:
-            writer.writerow(row)
+        writer.writerow(CSV_HEADERS)
+        writer.writerows(data)
 
 
 def main():
-    create_csv_with_headers(CSV_HEADERS)
     pagination_links = get_pagination_links(START_URL)
     item_links = get_item_links(pagination_links)
     data = get_data(item_links)
