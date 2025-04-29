@@ -55,7 +55,7 @@ for row in matrix:
 
 # 2-ое решение
 n, m = map(int, input().split())
-matrix = [[None] * n for i in range(m)]
+matrix = [[None] * n for _ in range(m)]
 count = 1
 
 for i in range(n):
