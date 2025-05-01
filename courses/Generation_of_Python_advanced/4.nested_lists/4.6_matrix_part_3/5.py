@@ -44,6 +44,7 @@ Sample Output 3:
 1  1
 """
 
+# 1-ое решение
 n = int(input())
 matrix = [
     [
@@ -53,4 +54,13 @@ matrix = [
 ]
 
 for row in matrix:
+    print(*row)
+
+
+# 2-ое решение
+n = int(input())
+for i in range(n):
+    row = ['0'.ljust(3)] * n
+    row[i] = '1'.ljust(3)
+    row[~i] = '1'.ljust(3)
     print(*row)
