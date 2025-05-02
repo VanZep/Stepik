@@ -33,8 +33,8 @@ import requests
 from bs4 import BeautifulSoup, Tag
 from fake_useragent import UserAgent
 
-type NamedField = str
-type StringValue = str
+# type NamedField = str
+# type StringValue = str
 
 # Настройка логирования для отслеживания работы парсера
 logging.basicConfig(
