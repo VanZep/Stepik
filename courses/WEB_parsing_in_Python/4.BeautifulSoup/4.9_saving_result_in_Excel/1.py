@@ -38,7 +38,7 @@ def get_soup(url):
         return BeautifulSoup(response.text, 'lxml')
 
     except requests.RequestException as error:
-        print(f"Произошла ошибка: {error}")
+        print(f'Произошла ошибка: {error}')
 
 
 def get_pagination_links(url):
