@@ -67,10 +67,10 @@ Sample Output 5:
 """
 
 n, m = map(int, input().split())
-matrix = [[0] * m for _ in range(n)]
+matrix = [[None] * m for _ in range(n)]
 count = 1
 
-for ij in range(n * m):
+for ij in range(n + m - 1):
     for i in range(n):
         if i > ij:
             break
