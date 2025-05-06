@@ -10,6 +10,11 @@ Sample Input:
 Sample Output:
 4 3 8 7
 """
-
+# 1-ое решение
 x = iter(input())
 print(*x)
+
+
+# 2-ое решение
+x = iter(input())
+print(next(x), next(x), next(x), next(x), sep=' ')
