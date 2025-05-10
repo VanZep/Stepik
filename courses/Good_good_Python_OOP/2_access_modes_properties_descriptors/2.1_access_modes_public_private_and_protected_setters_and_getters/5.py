@@ -37,8 +37,6 @@ draw(self) - отображение в консоли сообщения: "Пр�
 class Point:
 
     def __init__(self, x, y):
-        self.__x = self.__y = None
-
         if self.check_coords(x, y):
             self.__x = x
             self.__y = y
