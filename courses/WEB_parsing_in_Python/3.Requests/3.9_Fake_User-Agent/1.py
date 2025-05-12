@@ -37,3 +37,4 @@ for user_agent in user_agents:
     ).json()['password']
     if password != '0':
         print(password)
+        break
