@@ -10,6 +10,8 @@
 Программа должна вывести результирующую матрицу, разделяя элементы символом
 пробела.
 
+Тестовые данные
+
 Sample Input 1:
 2 4
 1 2 3 4
@@ -51,7 +53,7 @@ n, m = map(int, input().split())
 matrix_1 = [list(map(int, input().split())) for _ in range(n)]
 input()
 matrix_2 = [list(map(int, input().split())) for _ in range(n)]
-result_matrix = [[None] * m for _ in range(n)]
+result_matrix = [[0] * m for _ in range(n)]
 
 for i in range(n):
     for j in range(m):
