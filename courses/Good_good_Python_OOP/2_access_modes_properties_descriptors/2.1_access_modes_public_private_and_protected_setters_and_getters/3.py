@@ -37,7 +37,7 @@ class Book:
         self.__title = title if isinstance(title, str) else None
 
     def set_price(self, price):
-        self.__price = price if type(price) in (int, float) else None
+        self.__price = price if isinstance(price, (int, float)) else None
 
     def get_author(self):
         return self.__author

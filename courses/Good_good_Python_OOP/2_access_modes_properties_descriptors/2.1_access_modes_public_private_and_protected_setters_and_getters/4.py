@@ -26,7 +26,7 @@ class Line:
     def check_coords(*coords):
         checks = []
         for coord in coords:
-            checks.append(type(coord) in (int, float))
+            checks.append(isinstance(coord, (int, float)))
 
         return all(checks)
 
