@@ -43,7 +43,7 @@ class Point:
 
     @staticmethod
     def check_coords(x, y):
-        return type(x) in (int, float) and type(y) in (int, float)
+        return isinstance(x, (int, float)) and isinstance(y, (int, float))
 
     def get_coords(self):
         return self.__x, self.__y
