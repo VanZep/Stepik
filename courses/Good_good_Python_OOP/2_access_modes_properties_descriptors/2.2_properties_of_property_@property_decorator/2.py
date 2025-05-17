@@ -28,9 +28,10 @@ height - для изменения и считывания высоты окна
 class WindowDlg:
 
     def __init__(self, title, width, height):
-        self.__title = title
-        self.__width = width
-        self.__height = height
+        if self.is_string(title) and self.check_size(width, height):
+            self.__title = title
+            self.__width = width
+            self.__height = height
 
     def show(self):
         print(f'{self.__title}: {self.__width}, {self.__height}')
@@ -56,8 +57,17 @@ class WindowDlg:
             self.show()
 
     @staticmethod
-    def check_size(value):
-        return type(value) is int and 0 <= value <= 10_000
+    def is_string(value):
+        if not isinstance(value, str):
+            raise TypeError('Это значение должно быть строкой')
+
+        return True
+
+    @staticmethod
+    def check_size(*sizes):
+        return all(
+            [type(size) is int and 0 <= size <= 10_000 for size in sizes]
+        )
 
 
 wnd = WindowDlg('Диалог 1', 100, 50)
