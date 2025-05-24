@@ -34,6 +34,4 @@ Sample Output 3:
 NO
 """
 
-string_1 = input()
-string_2 = input()
-print(('NO', 'YES')[len(set(string_1 + string_2)) == 10])
+print(('NO', 'YES')[len(set(input() + input())) == 10])
