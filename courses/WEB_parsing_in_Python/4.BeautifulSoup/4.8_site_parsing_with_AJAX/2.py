@@ -58,19 +58,19 @@ amounts_per_give_currency = {
 }
 
 total = 0
-for currency in amounts_per_give_currency:
+for give_currency in amounts_per_give_currency:
     total += sum(
         [
             requests.get(
                 API_ENDPOINT,
                 params={
-                    'GiveName': currency,
-                    'GetName': x,
-                    'Sum': amounts_per_give_currency[currency],
+                    'GiveName': give_currency,
+                    'GetName': get_currency,
+                    'Sum': amounts_per_give_currency[give_currency],
                     'Direction': 0
                 }
-            ).json()['getSum'] for x in amounts_per_give_currency
-            if x != currency
+            ).json()['getSum'] for get_currency in amounts_per_give_currency
+            if get_currency != give_currency
         ]
     )
 
