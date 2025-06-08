@@ -74,7 +74,7 @@ class EmailValidator:
 
 
 random_email = EmailValidator.get_random_email()
-print(EmailValidator.get_random_email())
+print(random_email)
 print(EmailValidator.check_email(random_email))
 print()
 print(EmailValidator.check_email("sc_lib@list.ru"))  # == True
