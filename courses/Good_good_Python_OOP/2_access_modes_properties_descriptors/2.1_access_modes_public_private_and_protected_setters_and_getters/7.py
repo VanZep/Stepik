@@ -47,7 +47,7 @@ class EmailValidator:
     def get_random_email(cls):
         return (
             ''.join(
-                random.choice(string.ascii_letters + string.digits + '._')
+                random.choice(string.ascii_letters + string.digits + '_')
                 for _ in range(random.randint(1, 100))
             ) + '@gmail.com'
         )
