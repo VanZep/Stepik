@@ -72,6 +72,5 @@ symbol_button = {
     ' ': '0'
 }
 
-string = input().upper()
 
-print(''.join(symbol_button.get(symbol, '') for symbol in string))
+print(''.join(symbol_button.get(symbol, '') for symbol in input().upper()))
