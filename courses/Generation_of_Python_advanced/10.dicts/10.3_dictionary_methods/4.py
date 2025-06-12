@@ -18,7 +18,6 @@ s = (
 )
 
 word_count = {word: s.count(word) for word in s.split()}
-print(word_count)
 
 print(min(
     word for word in word_count if word_count[word] == max(word_count.values())
