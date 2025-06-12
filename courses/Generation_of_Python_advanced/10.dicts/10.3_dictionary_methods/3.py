@@ -9,5 +9,8 @@ text = (
     'listblockophthalmoscopicinterdependencemamauserfff'
 )
 
-result = {symbol: text.count(symbol) for symbol in set(text)}
+result = {}
+for char in text:
+    result[char] = result.get(char, 0) + 1
+
 print(result)
