@@ -27,14 +27,8 @@ sweet
 Sample Input 2:
 home sweet home sweet.
 
-home sweet - home sweet.
-
 Sample Output 2:
 home
-
-I bought two books: a new - book and an old book. The new book was more expensive than the old book.
-
-наш курс курс самый самый лучший
 """
 
 word_count = {}
