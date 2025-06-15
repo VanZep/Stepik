@@ -72,8 +72,9 @@ class StackObj:
         return self.__next
 
     @next.setter
-    def next(self, next_obj):
-        self.__next = next_obj
+    def next(self, obj):
+        if isinstance(obj, StackObj) or obj is None:
+            self.__next = obj
 
 
 class Stack:
