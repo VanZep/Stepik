@@ -83,6 +83,7 @@ def write_json(data):
 def main():
     pagination_links = get_pagination_links(START_URL)
     data = get_data_for_json(pagination_links)
+    print(data)
     write_json(data)
 
 
