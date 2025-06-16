@@ -56,7 +56,7 @@ def get_pagination_links(url):
 
 
 def get_data_for_json(links):
-    data_json = []
+    data = []
 
     for link in links:
         url = URL + link
@@ -68,11 +68,11 @@ def get_data_for_json(links):
                 x.text.split(':')[1].strip() for x in
                 item.find(class_='description').find_all('li')
             ]
-            data_json.append(
+            data.append(
                 dict(zip(JSON_HEADERS, (name, *description, price)))
             )
 
-    return data_json
+    return data
 
 
 def write_json(data):

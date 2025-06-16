@@ -79,21 +79,21 @@ def get_pagination_links(links):
 
 
 def get_data_for_json(links):
-    data_json = []
+    data = []
 
     for link in links:
         url = URL + link
         soup = get_soup(url)
         for item in soup.find_all(class_='item'):
             name = {'Наименование': item.find(class_='name_item').text.strip()}
-            price = {'Цена': item.find(class_='price').text}
+            price = {'Цена': item.find(class_='price').text.strip()}
             description = {
                 x.text.split(':')[0].strip(): x.text.split(':')[1].strip()
                 for x in item.find(class_='description').find_all('li')
             }
-            data_json.append(name | description | price)
+            data.append(name | description | price)
 
-    return data_json
+    return data
 
 
 def write_json(data):
