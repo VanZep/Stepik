@@ -13,6 +13,6 @@ letters = {
 
 remove_keys = [1, 5, 7, 12, 17, 19, 21, 24]
 
-result = {item: letters[item] for item in letters if item not in remove_keys}
+result = {item: letters[item] for item in set(letters).difference(remove_keys)}
 
 print(result)
