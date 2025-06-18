@@ -8,7 +8,7 @@
 import string
 import random
 
-length = int(input())  # длина пароля
+length = int(input())
 
 password = ''.join(
     [random.choice(string.ascii_letters) for _ in range(length)]

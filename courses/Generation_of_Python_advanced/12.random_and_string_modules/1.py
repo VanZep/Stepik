@@ -15,7 +15,7 @@
 
 import random
 
-n = int(input())  # количество попыток
+n = int(input())
 coin = {0: 'Решка', 1: 'Орел'}
 
 for _ in range(n):
