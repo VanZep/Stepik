@@ -54,8 +54,8 @@ Sample Output 3:
 from random import shuffle
 
 n = int(input())
-names = tuple(input() for _ in range(n))
-friends = list(names).copy()
+names = [input() for _ in range(n)]
+friends = names.copy()
 
 while True:
     shuffle(friends)
