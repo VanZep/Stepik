@@ -55,7 +55,7 @@ app = FastAPI()
 
 
 @app.get('/country/{country}')
-async def list_cities(country: str, limit: int) -> dict:
+async def list_cities(country: str, limit: int | None = None) -> dict:
     return {
         'country': country,
         'cities': country_dict[country][:limit]
