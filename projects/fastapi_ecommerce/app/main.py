@@ -1,7 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
 
-# from routers import category_router, products_router
 from routers import category, products
 
 app = FastAPI()
