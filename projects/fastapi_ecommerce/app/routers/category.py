@@ -5,9 +5,9 @@ from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from slugify import slugify
 
-from backend.db_depends import get_db
-from schemas import CreateCategory
-from models import Category
+from app.backend.db_depends import get_db
+from app.schemas import CreateCategory
+from app.models.category import Category
 
 router = APIRouter(prefix='/categories', tags=['category'])
 

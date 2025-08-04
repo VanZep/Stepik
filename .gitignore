@@ -7,3 +7,4 @@ images
 *.json
 *.csv
 *.txt
+draft.py
