@@ -8,7 +8,7 @@ from slugify import slugify
 from app.backend.db_depends import get_db
 from app.schemas import CreateProduct
 from app.models.category import Category
-from app.models.products import Product
+from app.models.product import Product
 
 router = APIRouter(prefix='/products', tags=['products'])
 

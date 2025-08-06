@@ -27,6 +27,11 @@ class Product(Base):
         Boolean,
         default=True
     )
+    supplier_id = Column(
+        Integer,
+        ForeignKey('users.id'),
+        nullable=True
+    )
     category_id = Column(
         Integer,
         ForeignKey('categories.id')
