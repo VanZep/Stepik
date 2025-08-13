@@ -63,7 +63,7 @@ async def update_category(
         update_category: CreateCategory,
         get_user: Annotated[dict, Depends(get_current_user)]
 ):
-    if get_user.get('is_active'):
+    if get_user.get('is_admin'):
         category = await db.scalar(
             select(
                 Category
@@ -103,7 +103,7 @@ async def delete_category(
         category_slug: str,
         get_user: Annotated[dict, Depends(get_current_user)]
 ):
-    if get_user.get('is_active'):
+    if get_user.get('is_admin'):
         category = await db.scalar(
             select(
                 Category

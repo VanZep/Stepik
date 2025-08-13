@@ -9,6 +9,7 @@ from app.backend.db_depends import get_db
 from app.schemas import CreateProduct
 from app.models.category import Category
 from app.models.product import Product
+from .auth import get_current_user
 
 router = APIRouter(prefix='/products', tags=['products'])
 
@@ -39,42 +40,51 @@ async def all_products(db: Annotated[AsyncSession, Depends(get_db)]):
 @router.post('/', status_code=status.HTTP_201_CREATED)
 async def create_product(
         db: Annotated[AsyncSession, Depends(get_db)],
-        create_product: CreateProduct
+        create_product: CreateProduct,
+        get_user: Annotated[dict, Depends(get_current_user)]
 ):
-    category = await db.scalar(
-        select(
-            Category
-        ).where(
-            Category.id == create_product.category
+    if get_user.get('is_admin') or get_user.get('is_supplier'):
+        category = await db.scalar(
+            select(
+                Category
+            ).where(
+                Category.id == create_product.category
+            )
         )
-    )
 
-    if not category:
+        if not category:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='There is no category found'
+            )
+
+        await db.execute(
+            insert(
+                Product
+            ).values(
+                name=create_product.name,
+                slug=slugify(create_product.name),
+                description=create_product.description,
+                price=create_product.price,
+                image_url=create_product.image_url,
+                stock=create_product.stock,
+                category_id=create_product.category,
+                supplier_id=get_user.get('id'),
+                rating=0.0
+            )
+        )
+        await db.commit()
+
+        return {
+            'status_code': status.HTTP_201_CREATED,
+            'transaction': 'Successful'
+        }
+
+    else:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail='There is no category found'
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='You are not authorized to use this method'
         )
-
-    await db.execute(
-        insert(
-            Product
-        ).values(
-            name=create_product.name,
-            slug=slugify(create_product.name),
-            description=create_product.description,
-            price=create_product.price,
-            image_url=create_product.image_url,
-            stock=create_product.stock,
-            category_id=create_product.category,
-            rating=0.0
-        )
-    )
-    await db.commit()
-
-    return {
-        'status_code': status.HTTP_201_CREATED,
-        'transaction': 'Successful'
-    }
 
 
 @router.get('/{category_slug}')
@@ -147,7 +157,8 @@ async def product_detail(
 async def update_product(
         db: Annotated[AsyncSession, Depends(get_db)],
         product_slug: str,
-        update_product: CreateProduct
+        update_product: CreateProduct,
+        get_user: Annotated[dict, Depends(get_current_user)]
 ):
     product_update = await db.scalar(
         select(
@@ -163,39 +174,51 @@ async def update_product(
             detail='There is no product found'
         )
 
-    category = await db.scalar(
-        select(
-            Category
-        ).where(
-            Category.id == update_product.category
+    if get_user.get('is_admin') or (
+            product_update.supplier_id == get_user.get('id')
+    ):
+
+        category = await db.scalar(
+            select(
+                Category
+            ).where(
+                Category.id == update_product.category
+            )
         )
-    )
-    if not category:
+
+        if not category:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='There is no category found'
+            )
+
+        product_update.name = update_product.name
+        product_update.slug = slugify(update_product.name)
+        product_update.description = update_product.description
+        product_update.price = update_product.price
+        product_update.image_url = update_product.image_url
+        product_update.stock = update_product.stock
+        product_update.category_id = update_product.category
+
+        await db.commit()
+
+        return {
+            'status_code': status.HTTP_200_OK,
+            'transaction': 'Product update is successful'
+        }
+
+    else:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail='There is no category found'
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='You are not authorized to use this method'
         )
-
-    product_update.name = update_product.name
-    product_update.slug = slugify(update_product.name)
-    product_update.description = update_product.description
-    product_update.price = update_product.price
-    product_update.image_url = update_product.image_url
-    product_update.stock = update_product.stock
-    product_update.category_id = update_product.category
-
-    await db.commit()
-
-    return {
-        'status_code': status.HTTP_200_OK,
-        'transaction': 'Product update is successful'
-    }
 
 
 @router.delete('/{product_slug}')
 async def delete_product(
         db: Annotated[AsyncSession, Depends(get_db)],
-        product_slug: str
+        product_slug: str,
+        get_user: Annotated[dict, Depends(get_current_user)]
 ):
     product_delete = await db.scalar(
         select(
@@ -212,11 +235,20 @@ async def delete_product(
             detail='There is no product found'
         )
 
-    product_delete.is_active = False
+    if get_user.get('is_admin') or (
+            product_delete.supplier_id == get_user.get('id')
+    ):
+        product_delete.is_active = False
 
-    await db.commit()
+        await db.commit()
 
-    return {
-        'status_code': status.HTTP_200_OK,
-        'transaction': 'Product delete is successful'
-    }
+        return {
+            'status_code': status.HTTP_200_OK,
+            'transaction': 'Product delete is successful'
+        }
+
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='You are not authorized to use this method'
+        )
