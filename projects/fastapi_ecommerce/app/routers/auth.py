@@ -82,6 +82,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail='Could not validate user'
             )
+
         if expire is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -109,6 +110,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
             'is_supplier': is_supplier,
             'is_customer': is_customer,
         }
+
     except jwt.ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -126,6 +128,7 @@ async def login(
         db: Annotated[AsyncSession, Depends(get_db)],
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ):
+    print('срабатывает функция login')
     user = await authenticate_user(db, form_data.username, form_data.password)
     token = await create_access_token(
         username=user.username,
