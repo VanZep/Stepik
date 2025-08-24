@@ -133,7 +133,7 @@ async def add_review(
     else:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail='You are not authorized to use this method'
+            detail="You don't have customer permission"
         )
 
 
@@ -170,5 +170,5 @@ async def delete_reviews(
     else:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail='You are not authorized to use this method'
+            detail="You don't have admin permission"
         )

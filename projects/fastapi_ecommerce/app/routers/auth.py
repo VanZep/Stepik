@@ -60,8 +60,8 @@ async def authenticate_user(
     ) or user.is_active == False:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
+            detail='Invalid authentication credentials',
+            headers={'WWW-Authenticate': 'Bearer'},
         )
 
     return user
@@ -86,13 +86,13 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         if expire is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="No access token supplied"
+                detail='No access token supplied'
             )
 
         if not isinstance(expire, int):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Invalid token format"
+                detail='Invalid token format'
             )
 
         current_time = datetime.now(timezone.utc).timestamp()
@@ -100,7 +100,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         if expire < current_time:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token expired!"
+                detail='Token expired!'
             )
 
         return {
@@ -114,7 +114,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     except jwt.ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token expired!"
+            detail='Token expired!'
         )
     except jwt.exceptions:
         raise HTTPException(
@@ -128,7 +128,6 @@ async def login(
         db: Annotated[AsyncSession, Depends(get_db)],
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ):
-    print('срабатывает функция login')
     user = await authenticate_user(db, form_data.username, form_data.password)
     token = await create_access_token(
         username=user.username,
