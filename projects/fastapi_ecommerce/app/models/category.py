@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
 from app.backend.db import Base
-from app.models.product import Product
+
+if TYPE_CHECKING:
+    from app.models.product import Product
 
 
 class Category(Base):
@@ -35,9 +39,3 @@ class Category(Base):
         back_populates='category',
         uselist=True
     )
-
-# if __name__ == '__main__':
-#     from sqlalchemy.schema import CreateTable
-#
-#     print(CreateTable(Category.__table__))
-#     print(CreateTable(Product.__table__))

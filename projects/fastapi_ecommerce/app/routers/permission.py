@@ -27,16 +27,6 @@ async def supplier_permission(
             )
 
         if user.is_supplier:
-            # await db.execute(
-            #     update(
-            #         User
-            #     ).where(
-            #         User.id == user_id
-            #     ).values(
-            #         is_supplier=False,
-            #         is_customer=True
-            #     )
-            # )
             user.is_supplier = False
             user.is_customer = True
             await db.commit()
@@ -47,16 +37,6 @@ async def supplier_permission(
             }
 
         else:
-            # await db.execute(
-            #     update(
-            #         User
-            #     ).where(
-            #         User.id == user_id
-            #     ).values(
-            #         is_supplier=True,
-            #         is_customer=False
-            #     )
-            # )
             user.is_supplier = True
             user.is_customer = False
             await db.commit()
@@ -95,15 +75,6 @@ async def delete_user(
             )
 
         if user.is_active:
-            # await db.execute(
-            #     update(
-            #         User
-            #     ).where(
-            #         User.id == user_id
-            #     ).values(
-            #         is_active=False
-            #     )
-            # )
             user.is_active = False
             await db.commit()
 
