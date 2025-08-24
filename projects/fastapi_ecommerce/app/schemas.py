@@ -26,7 +26,6 @@ class CreateUser(BaseModel):
 
 
 class CreateReview(BaseModel):
-    user_id: int
     product_id: int
     comment: str | None = None
     comment_date: datetime
