@@ -1,6 +1,7 @@
 from datetime import datetime
+from typing import Annotated
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class CreateProduct(BaseModel):
@@ -29,4 +30,4 @@ class CreateReview(BaseModel):
     product_id: int
     comment: str | None = None
     comment_date: datetime
-    grade: int
+    grade: Annotated[int, Field(gt=0, lt=11)]
