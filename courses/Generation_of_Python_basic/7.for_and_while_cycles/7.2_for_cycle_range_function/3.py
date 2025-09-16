@@ -52,8 +52,7 @@ Sample Output 3:
 
 m, n = int(input()), int(input())
 
-if m % 2 == 0:
-    m -= 1
+m = m - 1 + m % 2
 
 for i in range(m, n - 1, -2):
     print(i)
