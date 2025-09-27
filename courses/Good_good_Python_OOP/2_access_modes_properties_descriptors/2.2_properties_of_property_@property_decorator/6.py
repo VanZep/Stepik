@@ -45,8 +45,7 @@ from math import sqrt
 class PathLines:
 
     def __init__(self, *args):
-        self.path = []
-        self.path.extend(args)
+        self.path = list(args)
 
     def get_path(self):
         return self.path
