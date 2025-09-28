@@ -10,5 +10,5 @@ app = FastAPI()
 
 
 @app.get('/')
-def welcome():
+async def welcome():
     return {'message': 'My first project in FastAPI'}
