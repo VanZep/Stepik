@@ -1,36 +1,21 @@
 """
-Необходимо создать простой REST API на FastAPI для управления списком
-заметок (To-Do).
+Создайте приложение с эндпоинтом для чтения всех заметок. Заметки должны
+хранится в словаре notes_db, где ключ — id (целое число), значение — content
+(строка).
 
-API должен поддерживать обработку GET запросов, а именно обрабатывать операцию
-получения списка всех заметок и получение информации о конкретной заметке
-по её ID.
+Эндпоинт:
+GET /notes — возвращает словарь всех заметок. Если словарь пуст, возвращает {}.
 
-GET /todos/: Получение всех заметок. Возвращает словарь заметок.
-GET /todos/{todo_id}: Получение информации о конкретной заметке по ID.
-Возвращает текст заметки.
-
-Все заметки хранятся в словаре:
-todo_db = {0: "The first note"}
+Пример: GET /notes → {0: "Study FastAPI", 1: "I like FastAPI"}.
 """
 
-import uvicorn
-from fastapi import FastAPI, exceptions
-
-todo_db = {0: "The first note"}
+from fastapi import FastAPI
 
 app = FastAPI()
 
-
-@app.get('/todos')
-async def get_todo_list() -> dict:
-    return todo_db
+notes_db = {0: "Study FastAPI", 1: "I like FastAPI"}
 
 
-@app.get('/todos/{todo_id}')
-async def get_todo(todo_id: int) -> str:
-    return todo_db.get(todo_id, 'Invalid ID')
-
-
-if __name__ == '__main__':
-    uvicorn.run(app)
+@app.get('/notes')
+async def get_notes() -> dict:
+    return notes_db
