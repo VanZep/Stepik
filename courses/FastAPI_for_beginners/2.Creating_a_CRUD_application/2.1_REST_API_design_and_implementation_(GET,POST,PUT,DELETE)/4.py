@@ -24,7 +24,7 @@ quotes_db = {
 }
 
 
-@app.put('/quotes/{quote_id}')
+@app.put('/quotes/{quote_id}', status_code=status.HTTP_200_OK)
 async def update_quote(quote_id: int, quote_content: str = Body(...)) -> str:
     if not quotes_db.get(quote_id):
         raise HTTPException(

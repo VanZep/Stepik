@@ -18,7 +18,7 @@ app = FastAPI()
 tasks_db = {0: "Study FastAPI", 1: "I like FastAPI"}
 
 
-@app.get('/tasks/{task_id}')
+@app.get('/tasks/{task_id}', status_code=status.HTTP_200_OK)
 def get_task(task_id: int) -> str:
     task = tasks_db.get(task_id)
     if not task:
