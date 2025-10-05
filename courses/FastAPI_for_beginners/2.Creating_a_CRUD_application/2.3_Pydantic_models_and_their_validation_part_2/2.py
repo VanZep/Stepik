@@ -48,8 +48,8 @@ class User(UserCreate):
 
 
 @app.post('/users', status_code=status.HTTP_201_CREATED, response_model=User)
-async def create_user(created_user: UserCreate = Body(...)) -> User:
+async def create_user(user_create: UserCreate = Body(...)) -> User:
     new_id = max(user.id for user in users) + 1 if users else 1
-    user_create = User(id=new_id, **created_user.model_dump())
-    users.append(user_create)
-    return user_create
+    new_user = User(id=new_id, **user_create.model_dump())
+    users.append(new_user)
+    return new_user
