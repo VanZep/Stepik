@@ -79,7 +79,7 @@ class LessonItem:
         self.duration = duration
 
     def __setattr__(self, key, value):
-        if type(value) != self.__annotations__.get(key) or (
+        if not isinstance(value, self.__annotations__.get(key)) or (
                 key in ('practices', 'duration') and value <= 0
         ):
             raise TypeError('Неверный тип присваиваемых данных.')
