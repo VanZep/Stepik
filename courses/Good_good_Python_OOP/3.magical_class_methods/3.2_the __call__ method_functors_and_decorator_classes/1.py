@@ -47,7 +47,23 @@ class RandomPassword:
         )
 
 
-rnd = RandomPassword('qwertyuiopasdfghjklzxcvbnm0123456789!@#$%&*', 5, 20)
-lst_pass = [rnd() for _ in range(3)]
-psw = rnd()
-print(psw, lst_pass)
+if __name__ == '__main__':
+    min_length = 5
+    max_length = 20
+    psw_chars = "qwertyuiopasdfghjklzxcvbnm0123456789!@#$%&*"
+
+    rnd = RandomPassword(psw_chars, min_length, max_length)
+    lst_pass = [rnd() for _ in range(3)]
+    psw = rnd()
+    print(psw, lst_pass)
+
+    def generate_password(chars, min_len, max_len):
+        def gen():
+            return ''.join(
+                [choice(chars) for _ in range(randint(min_len, max_len))]
+            )
+        return gen
+
+    gen_psw = generate_password(psw_chars, min_length, max_length)
+    lst_pass2 = [gen_psw() for _ in range(3)]
+    print(lst_pass2)
