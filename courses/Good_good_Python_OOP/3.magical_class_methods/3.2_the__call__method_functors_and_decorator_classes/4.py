@@ -26,7 +26,6 @@ P.S. На экран ничего выводить не нужно.
 class DigitRetrieve:
 
     def __call__(self, value, *args, **kwargs):
-        print(value.lstrip('-'))
         if value.lstrip('-').isdigit() and value.count('-') < 2:
             return int(value)
         return None
@@ -35,7 +34,7 @@ class DigitRetrieve:
 dg = DigitRetrieve()
 d1 = dg("123")  # 123 (целое число)
 d2 = dg("45.54")  # None (не целое число)
-d3 = dg("--56")  # -56 (целое число)
+d3 = dg("-56")  # -56 (целое число)
 d4 = dg("12fg")  # None (не целое число)
 d5 = dg("abc")  # None (не целое число)
 print(d1, d2, d3, d4, d5)
