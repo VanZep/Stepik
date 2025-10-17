@@ -59,8 +59,9 @@ class Handler:
     def __call__(self, func):
         def wrapper(request, *args, **kwargs):
             method = request.get('method', 'GET')
-            if method in self.methods:
-                return self.__getattribute__(method.lower())(func, request)
+            if method not in self.methods:
+                return None
+            return self.__getattribute__(method.lower())(func, request)
 
         return wrapper
 
