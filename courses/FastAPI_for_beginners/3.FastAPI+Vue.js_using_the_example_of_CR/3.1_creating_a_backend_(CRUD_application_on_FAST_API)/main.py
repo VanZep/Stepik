@@ -7,6 +7,8 @@
 
 # Импортируем необходимые библиотеки
 from typing import List, Optional
+
+import uvicorn
 from fastapi import FastAPI, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
@@ -138,3 +140,7 @@ async def delete_message(id: int):
 
     # Удаляем сообщение из базы данных
     messages_db.pop(idx)
+
+
+if __name__ == '__main__':
+    uvicorn.run('main:app')
