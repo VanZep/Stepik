@@ -58,7 +58,7 @@ class RadiusVector:
         self.__coords[:n] = args[:n]
 
     def get_coords(self):
-        return self.__coords
+        return tuple(self.__coords)
 
     @staticmethod
     def check_dimension(value):
