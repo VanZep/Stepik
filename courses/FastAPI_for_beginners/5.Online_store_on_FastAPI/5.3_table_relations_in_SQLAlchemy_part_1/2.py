@@ -44,7 +44,8 @@ class User(Base):
     profile: Mapped['Profile'] = relationship(
         'Profile',
         uselist=False,
-        back_populates='user'
+        back_populates='user',
+        cascade='all, delete-orphan'
     )
 
 
