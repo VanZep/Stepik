@@ -59,7 +59,8 @@ class Post(Base):
         'Comment',
         uselist=True,
         back_populates='post',
-        cascade='all, delete-orphan'
+        cascade='all, delete-orphan',
+        single_parent=True
     )
 
 
