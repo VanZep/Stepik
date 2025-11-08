@@ -62,7 +62,11 @@ async def create_category(
     return db_category
 
 
-@router.put("/{category_id}", status_code=status.HTTP_200_OK)
+@router.put(
+    "/{category_id}",
+    response_model=CategorySchema,
+    status_code=status.HTTP_200_OK
+)
 async def update_category(
         category_id: int,
         category: CategoryCreate,
@@ -120,7 +124,11 @@ async def update_category(
     return db_category
 
 
-@router.delete("/{category_id}", status_code=status.HTTP_200_OK)
+@router.delete(
+    "/{category_id}",
+    response_model=dict,
+    status_code=status.HTTP_200_OK
+)
 async def delete_category(
         category_id: int,
         db: Session = Depends(get_db)

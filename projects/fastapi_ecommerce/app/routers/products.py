@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select, and_
 from sqlalchemy.orm import Session
@@ -10,12 +12,18 @@ from app.db_depends import get_db
 router = APIRouter(prefix="/products", tags=["products"])
 
 
-@router.get("/")
-async def get_all_products():
+@router.get(
+    "/",
+    response_model=List[ProductSchema],
+    status_code=status.HTTP_200_OK
+)
+async def get_all_products(db: Session = Depends(get_db)):
     """
     Возвращает список всех товаров.
     """
-    return {"message": "Список всех товаров (заглушка)"}
+    stmt = select(ProductModel).where(ProductModel.is_active == True)
+    products = db.scalars(stmt).all()
+    return products
 
 
 @router.post(
