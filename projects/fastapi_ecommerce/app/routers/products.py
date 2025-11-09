@@ -21,8 +21,14 @@ async def get_all_products(db: Session = Depends(get_db)):
     """
     Возвращает список всех товаров.
     """
-    stmt = select(ProductModel).where(ProductModel.is_active == True)
-    products = db.scalars(stmt).all()
+    products = db.scalars(
+        select(
+            ProductModel
+        ).where(
+            ProductModel.is_active == True
+        )
+    ).all()
+
     return products
 
 
@@ -38,25 +44,27 @@ async def create_product(
     """
     Создаёт новый товар.
     """
-    stmt = select(
-        CategoryModel
-    ).where(
-        and_(
-            CategoryModel.id == product.category_id,
-            CategoryModel.is_active == True
+    category = db.scalars(
+        select(
+            CategoryModel
+        ).where(
+            and_(
+                CategoryModel.id == product.category_id,
+                CategoryModel.is_active == True
+            )
         )
-    )
-    category = db.scalars(stmt).first()
+    ).first()
     if category is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Category not found"
+            detail="Category not found or not active"
         )
 
     db_product = ProductModel(**product.model_dump())
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
+
     return db_product
 
 
@@ -72,22 +80,33 @@ async def get_products_by_category(
     """
     Возвращает список товаров в указанной категории по её ID.
     """
-    stmt = select(
-        CategoryModel
-    ).where(
-        and_(
-            CategoryModel.id == category_id),
-            CategoryModel.is_active == True
-    )
-    category = db.scalars(stmt).first()
+    category = db.scalars(
+        select(
+            CategoryModel
+        ).where(
+            and_(
+                CategoryModel.id == category_id,
+                CategoryModel.is_active == True
+            )
+        )
+    ).first()
     if category is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Category not found"
+            detail="Category not found or not active"
         )
 
-    stmt = select(ProductModel).where(ProductModel.category_id == category_id)
-    products = db.scalars(stmt).all()
+    products = db.scalars(
+        select(
+            ProductModel
+        ).where(
+            and_(
+                ProductModel.category_id == category_id,
+                ProductModel.is_active == True
+            )
+        )
+    ).all()
+
     return products
 
 
@@ -103,33 +122,36 @@ async def get_product(
     """
     Возвращает детальную информацию о товаре по его ID.
     """
-    stmt = select(
-        ProductModel
-    ).where(
-        and_(
-            ProductModel.id == product_id,
-            ProductModel.is_active == True
+    product = db.scalars(
+        select(
+            ProductModel
+        ).where(
+            and_(
+                ProductModel.id == product_id,
+                ProductModel.is_active == True
+            )
         )
-    )
-    product = db.scalars(stmt).first()
+    ).first()
     if product is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Product not found"
+            detail="Product not found or not active"
         )
-    stmt = select(
-        CategoryModel
-    ).where(
-        and_(
-            CategoryModel.id == product.category_id,
-            CategoryModel.is_active == True
+
+    category = db.scalars(
+        select(
+            CategoryModel
+        ).where(
+            and_(
+                CategoryModel.id == product.category_id,
+                CategoryModel.is_active == True
+            )
         )
-    )
-    category = db.scalars(stmt).first()
+    ).first()
     if category is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Category not found"
+            detail="Category not found or not active"
         )
 
     return product
@@ -148,33 +170,36 @@ async def update_product(
     """
     Обновляет товар по его ID.
     """
-    stmt = select(
-        ProductModel
-    ).where(
-        and_(
-            ProductModel.id == product_id,
-            ProductModel.is_active == True
+    db_product = db.scalars(
+        select(
+            ProductModel
+        ).where(
+            and_(
+                ProductModel.id == product_id,
+                ProductModel.is_active == True
+            )
         )
-    )
-    db_product = db.scalars(stmt).first()
+    ).first()
     if db_product is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Product not found"
+            detail="Product not found or not active"
         )
-    stmt = select(
-        CategoryModel
-    ).where(
-        and_(
-            CategoryModel.id == product.category_id,
-            CategoryModel.is_active == True
+
+    category = db.scalars(
+        select(
+            CategoryModel
+        ).where(
+            and_(
+                CategoryModel.id == product.category_id,
+                CategoryModel.is_active == True
+            )
         )
-    )
-    category = db.scalars(stmt).first()
+    ).first()
     if category is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Category not found"
+            detail="Category not found or not active"
         )
 
     db.execute(
@@ -202,32 +227,25 @@ async def delete_product(
         db: Session = Depends(get_db)
 ):
     """
-    Удаляет товар по его ID.
+    Удаляет товар по его ID (логическое удаление).
     """
-    stmt = select(
-        ProductModel
-    ).where(
-        and_(
-            ProductModel.id == product_id,
-            ProductModel.is_active == True
+    product = db.scalars(
+        select(
+            ProductModel
+        ).where(
+            and_(
+                ProductModel.id == product_id,
+                ProductModel.is_active == True
+            )
         )
-    )
-    product = db.scalars(stmt).first()
+    ).first()
     if product is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Product not found"
+            detail="Product not found or not active"
         )
 
-    db.execute(
-        update(
-            ProductModel
-        ).where(
-            ProductModel.id == product_id
-        ).values(
-            is_ative=False
-        )
-    )
+    product.is_active = False
     db.commit()
 
     return {"status": "success", "message": "Product marked as inactive"}
