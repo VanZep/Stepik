@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,6 +9,23 @@ from app.schemas import Category as CategorySchema, CategoryCreate
 from app.db_depends import get_async_db
 
 router = APIRouter(prefix="/categories", tags=["categories"])
+
+
+@router.get(
+    "/",
+    response_model=List[CategorySchema],
+    status_code=status.HTTP_200_OK
+)
+async def get_all_categories(db: AsyncSession = Depends(get_async_db)):
+    categories = await db.scalars(
+        select(
+            CategoryModel
+        ).where(
+            CategoryModel.is_active == True
+        )
+    )
+
+    return categories.all()
 
 
 @router.post(
