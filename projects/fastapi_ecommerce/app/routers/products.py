@@ -175,10 +175,12 @@ async def get_product(
 async def update_product(
         product_id: int,
         product: ProductCreate,
-        db: AsyncSession = Depends(get_async_db)
+        db: AsyncSession = Depends(get_async_db),
+        current_user: UserModel = Depends(get_current_seller)
 ):
     """
-    Обновляет товар по его ID.
+    Обновляет товар, если он принадлежит текущему продавцу
+    (только для 'seller').
     """
     db_product = await db.scalars(
         select(
@@ -195,6 +197,12 @@ async def update_product(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='Product not found or not active'
+        )
+
+    if db_product.seller_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='You can only update your own products'
         )
 
     category = await db.scalars(
@@ -236,7 +244,8 @@ async def update_product(
 )
 async def delete_product(
         product_id: int,
-        db: AsyncSession = Depends(get_async_db)
+        db: AsyncSession = Depends(get_async_db),
+        current_user: UserModel = Depends(get_current_seller)
 ):
     """
     Удаляет товар по его ID (логическое удаление).
@@ -256,6 +265,12 @@ async def delete_product(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='Product not found or not active'
+        )
+
+    if product.seller_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='You can only delete your own products'
         )
 
     product.is_active = False
