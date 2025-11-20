@@ -6,8 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.products import Product as ProductModel
 from app.models.categories import Category as CategoryModel
+from app.models.users import User as UserModel
 from app.schemas import Product as ProductSchema, ProductCreate
 from app.db_depends import get_async_db
+from app.auth import get_current_seller
 
 router = APIRouter(prefix='/products', tags=['products'])
 
@@ -39,10 +41,11 @@ async def get_all_products(db: AsyncSession = Depends(get_async_db)):
 )
 async def create_product(
         product: ProductCreate,
-        db: AsyncSession = Depends(get_async_db)
+        db: AsyncSession = Depends(get_async_db),
+        current_user: UserModel = Depends(get_current_seller)
 ):
     """
-    Создаёт новый товар.
+    Создаёт новый товар, привязанный к текущему продавцу (только для 'seller').
     """
     category = await db.scalars(
         select(
@@ -61,7 +64,10 @@ async def create_product(
             detail='Category not found or not active'
         )
 
-    product = ProductModel(**product.model_dump())
+    product = ProductModel(
+        **product.model_dump(),
+        seller_id=current_user.id
+    )
     db.add(product)
     await db.commit()
     await db.refresh(product)
