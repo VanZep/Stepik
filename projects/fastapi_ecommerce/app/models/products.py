@@ -1,3 +1,4 @@
+from typing import List
 from decimal import Decimal
 
 from sqlalchemy import Integer, String, Boolean, Numeric, ForeignKey
@@ -58,4 +59,10 @@ class Product(Base):
     seller: Mapped['User'] = relationship(
         'User',
         back_populates='products'
+    )
+    reviews: Mapped[List['Review']] = relationship(
+        'Review',
+        uselist=True,
+        back_populates='product',
+        cascade='all, delete-orphan'
     )

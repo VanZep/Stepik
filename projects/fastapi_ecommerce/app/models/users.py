@@ -31,7 +31,7 @@ class User(Base):
         default=True
     )
     role: Mapped[str] = mapped_column(
-        String,
+        String(6),
         default='buyer'
     )
 
@@ -40,4 +40,9 @@ class User(Base):
         uselist=True,
         back_populates='seller',
         cascade='all, delete-orphan'
+    )
+    reviews: Mapped[List['Review']] = relationship(
+        'Review',
+        uselist=True,
+        back_populates='buyer'
     )
