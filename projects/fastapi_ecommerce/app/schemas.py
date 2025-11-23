@@ -124,6 +124,10 @@ class Product(BaseModel):
         ...,
         description="Активность товара"
     )
+    rating: float = Field(
+        ...,
+        description="Средний рейтинг товара"
+    )
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -202,11 +206,11 @@ class Review(ReviewCreate):
     )
     user_id: Optional[int] = Field(
         None,
-        description="ID пользователя"
+        description="ID пользователя, который оставил отзыв"
     )
     product_id: int = Field(
         ...,
-        description="ID товара"
+        description="ID товара, к которому относится отзыв"
     )
     comment_date: datetime = Field(
         ...,
