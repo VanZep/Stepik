@@ -51,6 +51,12 @@ class Product(Base):
         ForeignKey('users.id'),
         nullable=False
     )
+    rating: Mapped[Decimal] = mapped_column(
+        Numeric(2, 1),
+        default=0.0,
+        server_default='0',
+        nullable=False
+    )
 
     category: Mapped['Category'] = relationship(
         'Category',
