@@ -18,6 +18,15 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
+    op.add_column(
+        'products',
+        sa.Column(
+            'rating',
+            sa.Numeric(precision=2, scale=1),
+            server_default=sa.text('0'),
+            nullable=False
+        )
+    ),
     op.create_table(
         'reviews',
         sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
