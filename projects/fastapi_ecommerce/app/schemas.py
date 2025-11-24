@@ -189,7 +189,7 @@ class ReviewCreate(BaseModel):
     )
     grade: int = Field(
         ...,
-        gt=0,
+        ge=1,
         le=5,
         description="Оценка товара"
     )

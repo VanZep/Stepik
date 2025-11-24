@@ -14,7 +14,8 @@ class Category(Base):
         primary_key=True,
         autoincrement=True,
         nullable=False,
-        unique=True
+        unique=True,
+        index=True
     )
     name: Mapped[str] = mapped_column(
         String(50),

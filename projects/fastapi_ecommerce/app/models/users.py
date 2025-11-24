@@ -14,7 +14,8 @@ class User(Base):
         primary_key=True,
         autoincrement=True,
         nullable=False,
-        unique=True
+        unique=True,
+        index=True
     )
     email: Mapped[str] = mapped_column(
         String,
@@ -31,7 +32,7 @@ class User(Base):
         default=True
     )
     role: Mapped[str] = mapped_column(
-        String(6),
+        String,
         default='buyer'
     )
 
