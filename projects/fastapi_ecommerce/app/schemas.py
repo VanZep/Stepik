@@ -183,6 +183,10 @@ class ReviewCreate(BaseModel):
     Модель для создания и обновления отзыва.
     Используется в POST и PUT запросах.
     """
+    product_id: int = Field(
+        ...,
+        description="ID товара, к которому относится отзыв"
+    )
     comment: Optional[str] = Field(
         None,
         description="Текст отзыва"
@@ -194,14 +198,8 @@ class ReviewCreate(BaseModel):
         description="Оценка товара"
     )
 
-    "id": 1,
-    "user_id": 2,
-    "product_id": 1,
-    "comment": "Отличный ноутбук!",
-    "comment_date": "2025-08-26T21:30:00Z",
-    "grade": 5,
-    "is_active": true
-class Review(ReviewCreate):
+
+class Review(BaseModel):
     """
     Модель для ответа с данными отзыва.
     Используется в GET-запросах.
@@ -218,9 +216,19 @@ class Review(ReviewCreate):
         ...,
         description="ID товара, к которому относится отзыв"
     )
+    comment: Optional[str] = Field(
+        None,
+        description="Текст отзыва"
+    )
     comment_date: datetime = Field(
         ...,
         description="Дата и время создания отзыва"
+    )
+    grade: int = Field(
+        ...,
+        ge=1,
+        le=5,
+        description="Оценка товара"
     )
     is_active: bool = Field(
         ...,
