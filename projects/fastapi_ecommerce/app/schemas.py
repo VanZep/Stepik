@@ -194,7 +194,13 @@ class ReviewCreate(BaseModel):
         description="Оценка товара"
     )
 
-
+    "id": 1,
+    "user_id": 2,
+    "product_id": 1,
+    "comment": "Отличный ноутбук!",
+    "comment_date": "2025-08-26T21:30:00Z",
+    "grade": 5,
+    "is_active": true
 class Review(ReviewCreate):
     """
     Модель для ответа с данными отзыва.
