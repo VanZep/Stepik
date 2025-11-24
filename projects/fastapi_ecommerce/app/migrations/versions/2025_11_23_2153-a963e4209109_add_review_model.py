@@ -18,15 +18,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
-    op.add_column(
-        'products',
-        sa.Column(
-            'rating',
-            sa.Numeric(precision=2, scale=1),
-            server_default=sa.text('0'),
-            nullable=False
-        )
-    ),
     op.create_table(
         'reviews',
         sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -46,11 +37,11 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_reviews_id'), 'reviews', ['id'], unique=True)
-    op.create_unique_constraint(None, 'users', ['id'])
+    op.create_unique_constraint('uq_users_id', 'users', ['id'])
 
 
 def downgrade() -> None:
     """Downgrade schema."""
-    op.drop_constraint(None, 'users', type_='unique')
+    op.drop_constraint('uq_users_id', 'users', type_='unique')
     op.drop_index(op.f('ix_reviews_id'), table_name='reviews')
     op.drop_table('reviews')

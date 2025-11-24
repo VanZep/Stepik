@@ -1,4 +1,4 @@
-"""Add user model
+"""Add User model
 
 Revision ID: e7921bd08210
 Revises: 9560bf0a1c3a
@@ -30,20 +30,20 @@ def upgrade() -> None:
         sa.UniqueConstraint('id')
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
-    op.create_unique_constraint(None, 'categories', ['id'])
+    op.create_unique_constraint(op.f('uq_categories_id'), 'categories', ['id'])
     op.add_column(
         'products',
         sa.Column('seller_id', sa.Integer(), nullable=False)
     )
-    op.create_unique_constraint(None, 'products', ['id'])
-    op.create_foreign_key(None, 'products', 'users', ['seller_id'], ['id'])
+    op.create_unique_constraint('uq_products_id', 'products', ['id'])
+    op.create_foreign_key('fk_products_seller_id_users', 'products', 'users', ['seller_id'], ['id'])
 
 
 def downgrade() -> None:
     """Downgrade schema."""
-    op.drop_constraint(None, 'products', type_='foreignkey')
-    op.drop_constraint(None, 'products', type_='unique')
+    op.drop_constraint('fk_products_seller_id_users', 'products', type_='foreignkey')
+    op.drop_constraint('uq_products_id', 'products', type_='unique')
     op.drop_column('products', 'seller_id')
-    op.drop_constraint(None, 'categories', type_='unique')
+    op.drop_constraint('uq_categories_id', 'categories', type_='unique')
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
