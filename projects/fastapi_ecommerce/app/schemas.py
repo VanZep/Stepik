@@ -208,8 +208,8 @@ class Review(BaseModel):
         ...,
         description="Уникальный идентификатор отзыва"
     )
-    user_id: Optional[int] = Field(
-        None,
+    user_id: int = Field(
+        ...,
         description="ID пользователя, который оставил отзыв"
     )
     product_id: int = Field(

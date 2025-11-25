@@ -64,15 +64,15 @@ async def create_product(
             detail='Category not found or not active'
         )
 
-    product = ProductModel(
+    product_db = ProductModel(
         **product.model_dump(),
         seller_id=current_user.id
     )
-    db.add(product)
+    db.add(product_db)
     await db.commit()
-    await db.refresh(product)
+    await db.refresh(product_db)
 
-    return product
+    return product_db
 
 
 @router.get(
