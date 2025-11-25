@@ -1,4 +1,3 @@
-from os.path import exists
 from typing import List
 
 from fastapi import APIRouter, status, Depends, HTTPException
@@ -10,7 +9,7 @@ from app.models import Product as ProductModel
 from app.models import User as UserModel
 from app.schemas import Review as ReviewSchema, ReviewCreate
 from app.db_depends import get_async_db
-from app.auth import get_current_buyer
+from app.auth import get_current_buyer, get_current_admin
 from app.utils import update_product_rating
 
 router = APIRouter(prefix='/reviews', tags=['reviews'])
@@ -131,3 +130,55 @@ async def create_review(
 
     return review_db
 
+
+@router.delete(
+    '/{review_id}',
+    response_model=ReviewSchema,
+    status_code=status.HTTP_200_OK
+)
+async def delete_review(
+        review_id: int,
+        db: AsyncSession = Depends(get_async_db),
+        current_user: UserModel = Depends(get_current_admin)
+):
+    review = await db.scalars(
+        select(
+            ReviewModel
+        ).where(
+            and_(
+                ReviewModel.id == review_id,
+                ReviewModel.is_active == True
+            )
+        )
+    )
+    review = review.first()
+    if review is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Review not found or not active'
+        )
+
+    product = await db.scalars(
+        select(
+            ProductModel
+        ).where(
+            and_(
+                ProductModel.id == review.product_id,
+                ProductModel.is_active == True
+            )
+        )
+    )
+    product = product.first()
+    if product is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='Product not found or not active'
+        )
+
+    review.is_active = False
+    await db.commit()
+    await db.refresh(review)
+
+    await update_product_rating(product, db)
+
+    return review
