@@ -46,6 +46,9 @@ async def get_reviews_by_product(
         product_id: int,
         db: AsyncSession = Depends(get_async_db)
 ):
+    """
+    Возвращает список отзывов для указанного товара по его ID.
+    """
     product = await db.scalars(
         select(
             ProductModel
@@ -87,6 +90,10 @@ async def create_review(
         db: AsyncSession = Depends(get_async_db),
         current_user: UserModel = Depends(get_current_buyer)
 ):
+    """
+    Создаёт новый отзыв, привязанный к текущему покупателю и товару
+    (только для 'buyer').
+    """
     product = await db.scalars(
         select(
             ProductModel
@@ -141,6 +148,9 @@ async def delete_review(
         db: AsyncSession = Depends(get_async_db),
         current_user: UserModel = Depends(get_current_admin)
 ):
+    """
+    Удаляет отзыв по его ID (логическое удаление).
+    """
     review = await db.scalars(
         select(
             ReviewModel
