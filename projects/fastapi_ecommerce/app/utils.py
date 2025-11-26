@@ -18,6 +18,6 @@ async def update_product_rating(
                 ReviewModel.is_active == True
             )
         )
-    )
+    ) or 0.0
     await db.commit()
     await db.refresh(product)
