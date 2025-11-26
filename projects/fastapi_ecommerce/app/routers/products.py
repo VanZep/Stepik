@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, status, Depends, HTTPException, Query
 from sqlalchemy import select, and_, update, func
@@ -20,20 +20,63 @@ router = APIRouter(prefix='/products', tags=['products'])
     status_code=status.HTTP_200_OK
 )
 async def get_all_products(
+        db: AsyncSession = Depends(get_async_db),
         page: int = Query(1, ge=1),
         page_size: int = Query(20, ge=1, le=100),
-        db: AsyncSession = Depends(get_async_db)
+        category_id: Optional[int] = Query(
+            None,
+            description='ID категории для фильтрации'
+        ),
+        min_price: Optional[float] = Query(
+            None,
+            ge=0,
+            description='Минимальная цена товара'
+        ),
+        max_price: Optional[float] = Query(
+            None,
+            ge=0,
+            description='Максимальная цена товара'
+        ),
+        in_stock: Optional[bool] = Query(
+            None,
+            description='true — товары в наличии, false — товары без остатка'
+        ),
+        seller_id: Optional[int] = Query(
+            None,
+            description='ID продавца для фильтрации'
+        )
 ):
     """
     Возвращает список всех активных товаров.
     """
+    if min_price and max_price and min_price > max_price:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='min_price не может быть больше max_price'
+        )
+
+    filters = [ProductModel.is_active == True]
+
+    if category_id is not None:
+        filters.append(ProductModel.category_id == category_id)
+    if min_price is not None:
+        filters.append(ProductModel.price >= min_price)
+    if max_price is not None:
+        filters.append(ProductModel.price <= max_price)
+    if in_stock is not None:
+        filters.append(
+            ProductModel.stock > 0 if in_stock else ProductModel.stock == 0
+        )
+    if seller_id is not None:
+        filters.append(ProductModel.seller_id == seller_id)
+
     total = await db.scalar(
         select(
             func.count()
         ).select_from(
             ProductModel
         ).where(
-            ProductModel.is_active == True
+            *filters
         )
     ) or 0
 
@@ -41,7 +84,7 @@ async def get_all_products(
         select(
             ProductModel
         ).where(
-            ProductModel.is_active == True
+            *filters
         ).order_by(
             ProductModel.id.asc()
         ).offset(
