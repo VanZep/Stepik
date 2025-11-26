@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import List, Optional
 
 from fastapi import APIRouter, status, Depends, HTTPException, Query
@@ -27,12 +28,12 @@ async def get_all_products(
             None,
             description='ID категории для фильтрации'
         ),
-        min_price: Optional[float] = Query(
+        min_price: Optional[Decimal] = Query(
             None,
             ge=0,
             description='Минимальная цена товара'
         ),
-        max_price: Optional[float] = Query(
+        max_price: Optional[Decimal] = Query(
             None,
             ge=0,
             description='Максимальная цена товара'
