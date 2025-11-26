@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
@@ -235,6 +235,33 @@ class Review(BaseModel):
     is_active: bool = Field(
         ...,
         description="Активность отзыва"
+    )
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ProductList(BaseModel):
+    """
+    Список пагинации для товаров.
+    """
+    items: List[Product] = Field(
+        ...,
+        description="Товары для текущей страницы"
+    )
+    total: int = Field(
+        ...,
+        ge=0,
+        description="Общее количество товаров"
+    )
+    page: int = Field(
+        ...,
+        ge=1,
+        description="Номер текущей страницы"
+    )
+    page_size: int = Field(
+        ...,
+        ge=1,
+        description="Количество элементов на странице"
     )
 
     model_config = ConfigDict(from_attributes=True)
