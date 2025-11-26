@@ -1,7 +1,9 @@
 from typing import List
 from decimal import Decimal
 
-from sqlalchemy import Integer, String, Boolean, Numeric, ForeignKey, text
+from sqlalchemy import (
+    Integer, Float, String, Boolean, Numeric, ForeignKey, text
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -52,8 +54,8 @@ class Product(Base):
         ForeignKey('users.id'),
         nullable=False
     )
-    rating: Mapped[Decimal] = mapped_column(
-        Numeric(2, 1),
+    rating: Mapped[float] = mapped_column(
+        Float,
         default=0.0,
         server_default=text('0'),
         nullable=False

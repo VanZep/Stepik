@@ -126,7 +126,9 @@ class Product(BaseModel):
     )
     rating: float = Field(
         ...,
-        description="Средний рейтинг товара"
+        description="Средний рейтинг товара",
+        ge=0.0,
+        le=5.0
     )
 
     model_config = ConfigDict(from_attributes=True)
