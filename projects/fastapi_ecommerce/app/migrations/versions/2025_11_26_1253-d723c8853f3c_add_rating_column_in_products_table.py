@@ -1,4 +1,4 @@
-"""add rating column in product table
+"""add rating column in products table
 
 Revision ID: d723c8853f3c
 Revises: de8bb6a90e52
