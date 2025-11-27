@@ -75,10 +75,16 @@ async def get_all_products(
         )
     if seller_id is not None:
         filters.append(ProductModel.seller_id == seller_id)
+
+    rank_col = None
     if search is not None:
         search = search.strip()
         if search:
-            filters.append(ProductModel.name.ilike(f'%{search}%'))
+            ts_query = func.websearch_to_tsquery('english', search)
+            filters.append(ProductModel.tsv.op('@@')(ts_query))
+            rank_col = func.ts_rank_cd(
+                ProductModel.tsv, ts_query
+            ).label('rank')
 
     total = await db.scalar(
         select(
@@ -90,22 +96,37 @@ async def get_all_products(
         )
     ) or 0
 
-    products = await db.scalars(
-        select(
-            ProductModel
-        ).where(
-            *filters
-        ).order_by(
-            ProductModel.id.asc()
-        ).offset(
-            (page - 1) * page_size
-        ).limit(
-            page_size
-        )
-    )
+    if rank_col is not None:
+        products = (await db.scalars(
+            select(
+                ProductModel
+            ).where(
+                *filters
+            ).order_by(
+                rank_col.desc(), ProductModel.id.asc()
+            ).offset(
+                (page - 1) * page_size
+            ).limit(
+                page_size
+            )
+        )).all()
+    else:
+        products = (await db.scalars(
+            select(
+                ProductModel
+            ).where(
+                *filters
+            ).order_by(
+                ProductModel.id.asc()
+            ).offset(
+                (page - 1) * page_size
+            ).limit(
+                page_size
+            )
+        )).all()
 
     return {
-        'items': products.all(),
+        'items': products,
         'total': total,
         'page': page,
         'page_size': page_size
