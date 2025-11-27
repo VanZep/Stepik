@@ -45,6 +45,11 @@ async def get_all_products(
         seller_id: Optional[int] = Query(
             None,
             description='ID продавца для фильтрации'
+        ),
+        search: Optional[str] = Query(
+            None,
+            min_length=1,
+            description='Поиск по названию товара'
         )
 ):
     """
@@ -70,6 +75,10 @@ async def get_all_products(
         )
     if seller_id is not None:
         filters.append(ProductModel.seller_id == seller_id)
+    if search is not None:
+        search = search.strip()
+        if search:
+            filters.append(ProductModel.name.ilike(f'%{search}%'))
 
     total = await db.scalar(
         select(
