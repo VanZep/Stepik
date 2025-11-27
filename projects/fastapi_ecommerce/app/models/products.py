@@ -67,11 +67,11 @@ class Product(Base):
     tsv: Mapped[TSVECTOR] = mapped_column(
         TSVECTOR,
         Computed(
-            '''
-            setweight(to_tsvector("english", coalesce(name, "")), "A")
-            ||
-            setweight(to_tsvector("english", coalesce(description, "")), "B")
-            ''',
+            """
+            setweight(to_tsvector('english', coalesce(name, '')), 'A')
+            || 
+            setweight(to_tsvector('english', coalesce(description, '')), 'B')
+            """,
             persisted=True
         ),
         nullable=False
