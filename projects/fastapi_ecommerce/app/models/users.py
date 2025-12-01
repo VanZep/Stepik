@@ -47,3 +47,9 @@ class User(Base):
         uselist=True,
         back_populates='buyer'
     )
+    cart_items: Mapped[List['CartItem']] = relationship(
+        'CartItem',
+        uselist=True,
+        back_populates='user',
+        cascade='all, delete-orphan'
+    )

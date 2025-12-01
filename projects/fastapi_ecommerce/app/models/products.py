@@ -50,12 +50,12 @@ class Product(Base):
     )
     category_id: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey('categories.id'),
+        ForeignKey('categories.id', onupdate='CASCADE'),
         nullable=False
     )
     seller_id: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey('users.id'),
+        ForeignKey('users.id', onupdate='CASCADE'),
         nullable=False
     )
     rating: Mapped[float] = mapped_column(
@@ -87,6 +87,12 @@ class Product(Base):
     )
     reviews: Mapped[List['Review']] = relationship(
         'Review',
+        uselist=True,
+        back_populates='product',
+        cascade='all, delete-orphan'
+    )
+    cart_items: Mapped[List['CartItem']] = relationship(
+        'CartItem',
         uselist=True,
         back_populates='product',
         cascade='all, delete-orphan'
