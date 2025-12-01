@@ -50,12 +50,12 @@ class Product(Base):
     )
     category_id: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey('categories.id', onupdate='CASCADE'),
+        ForeignKey('categories.id'),
         nullable=False
     )
     seller_id: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey('users.id', onupdate='CASCADE'),
+        ForeignKey('users.id'),
         nullable=False
     )
     rating: Mapped[float] = mapped_column(
