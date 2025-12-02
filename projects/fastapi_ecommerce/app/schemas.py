@@ -1,6 +1,6 @@
 from decimal import Decimal
-from typing import Optional, List
 from datetime import datetime
+from typing import Optional, List
 
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 
@@ -134,6 +134,33 @@ class Product(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class ProductList(BaseModel):
+    """
+    Список пагинации для товаров.
+    """
+    items: List[Product] = Field(
+        ...,
+        description="Товары для текущей страницы"
+    )
+    total: int = Field(
+        ...,
+        ge=0,
+        description="Общее количество товаров"
+    )
+    page: int = Field(
+        ...,
+        ge=1,
+        description="Номер текущей страницы"
+    )
+    page_size: int = Field(
+        ...,
+        ge=1,
+        description="Количество элементов на странице"
+    )
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class UserCreate(BaseModel):
     """
     Модель для создания и обновления пользователя.
@@ -240,28 +267,46 @@ class Review(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class ProductList(BaseModel):
-    """
-    Список пагинации для товаров.
-    """
-    items: List[Product] = Field(
+class CartItem(BaseModel):
+    """Товар в корзине с данными продукта."""
+
+    id: int = Field(
         ...,
-        description="Товары для текущей страницы"
+        description='ID позиции корзины'
     )
-    total: int = Field(
+    quantity: int = Field(
         ...,
-        ge=0,
-        description="Общее количество товаров"
+        gt=0,
+        description='Количество товара'
     )
-    page: int = Field(
+    product: Product = Field(
         ...,
-        ge=1,
-        description="Номер текущей страницы"
+        description='Информация о товаре'
     )
-    page_size: int = Field(
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class Cart(BaseModel):
+    """ Модель для получения полной информации о корзине пользователя."""
+
+    user_id: int = Field(
         ...,
-        ge=1,
-        description="Количество элементов на странице"
+        description='ID пользователя, обладающего корзиной'
+    )
+    items: List[CartItem] = Field(
+        default_factory=List,
+        description='Содержимое корзины'
+    )
+    total_quantity: int = Field(
+        ...,
+        gt=0,
+        description='Общее количество товаров'
+    )
+    total_price: Decimal = Field(
+        ...,
+        gt=0,
+        description='Общая стоимость товаров'
     )
 
     model_config = ConfigDict(from_attributes=True)
