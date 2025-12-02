@@ -55,7 +55,7 @@ async def get_all_products(
         )
 ):
     """
-    Возвращает список всех активных товаров.
+    Возвращает список всех активных товаров по фильтру.
     """
     if min_price and max_price and min_price > max_price:
         raise HTTPException(

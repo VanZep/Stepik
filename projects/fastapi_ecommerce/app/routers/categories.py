@@ -17,6 +17,9 @@ router = APIRouter(prefix="/categories", tags=["categories"])
     status_code=status.HTTP_200_OK
 )
 async def get_all_categories(db: AsyncSession = Depends(get_async_db)):
+    """
+    Предоставляет все активные категории.
+    """
     categories = await db.scalars(
         select(
             CategoryModel
@@ -141,6 +144,9 @@ async def delete_category(
         category_id: int,
         db: AsyncSession = Depends(get_async_db)
 ):
+    """
+    Удаляет категорию по ID.
+    """
     category = await db.scalars(
         select(
             CategoryModel
