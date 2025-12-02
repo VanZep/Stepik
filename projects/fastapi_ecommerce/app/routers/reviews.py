@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import Review as ReviewModel
 from app.models import Product as ProductModel
 from app.models import User as UserModel
-from app.schemas import Review as ReviewSchema, ReviewCreate
+from app.schemas.reviews import Review as ReviewSchema, ReviewCreate
 from app.db_depends import get_async_db
 from app.auth import get_current_buyer, get_current_admin
 from app.utils import update_product_rating

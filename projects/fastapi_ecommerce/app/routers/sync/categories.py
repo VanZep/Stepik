@@ -5,7 +5,7 @@ from sqlalchemy import select, update, and_
 from sqlalchemy.orm import Session
 
 from app.models.categories import Category as CategoryModel
-from app.schemas.categories import Category as CategorySchema, CategoryCreate
+from app.schemas_old import Category as CategorySchema, CategoryCreate
 from app.db_depends import get_db
 
 router = APIRouter(prefix="/categories", tags=["categories"])

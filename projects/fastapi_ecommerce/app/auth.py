@@ -8,7 +8,7 @@ from passlib.context import CryptContext
 import jwt
 
 from app.models.users import User as UserModel
-from app.schemas import User as UserSchema
+from app.schemas.users import User as UserSchema
 from app.db_depends import get_async_db
 from app.config import SECRET_KEY, ALGORITHM
 

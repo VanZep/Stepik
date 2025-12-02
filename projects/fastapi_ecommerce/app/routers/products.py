@@ -8,7 +8,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.products import Product as ProductModel
 from app.models.categories import Category as CategoryModel
 from app.models.users import User as UserModel
-from app.schemas import Product as ProductSchema, ProductCreate, ProductList
+from app.schemas.products import (
+    Product as ProductSchema, ProductCreate, ProductList
+)
 from app.db_depends import get_async_db
 from app.auth import get_current_seller
 
