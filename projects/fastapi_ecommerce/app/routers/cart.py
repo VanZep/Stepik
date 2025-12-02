@@ -1,10 +1,9 @@
 from decimal import Decimal
 
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, status, Depends, HTTPException, Response
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
-from watchfiles import awatch
 
 from app.models.users import User as UserModel
 from app.models.cart_items import CartItem as CartItemModel
@@ -50,8 +49,11 @@ async def get_cart(
 
     total_price = sum(
         (
-            item.product.price if item.product.price is not None
-            else Decimal('0') * Decimal(item.quantity)
+            (
+                item.product.price
+                if item.product.price is not None
+                else Decimal('0')
+            ) * Decimal(item.quantity)
             for item in items
         ),
         Decimal('0')
@@ -122,3 +124,30 @@ async def update_cart_item(
     await db.commit()
 
     return await get_cart_item(db, current_user.id, product_id)
+
+
+@router.delete(
+    '/items/{product_id}',
+    status_code=status.HTTP_204_NO_CONTENT
+)
+async def delete_cart_item(
+        product_id: int,
+        db: AsyncSession = Depends(get_async_db),
+        current_user: UserModel = Depends(get_current_user)
+):
+    """
+    Удаляет товар из корзины пользователя.
+    """
+    await checking_product_availability(db, product_id)
+
+    cart_item = await get_cart_item(db, current_user.id, product_id)
+    if cart_item is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Cart item not found in cart'
+        )
+
+    await db.delete(cart_item)
+    await db.commit()
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
