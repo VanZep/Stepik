@@ -97,3 +97,8 @@ class Product(Base):
         back_populates='product',
         cascade='all, delete-orphan'
     )
+    order_items: Mapped[List['OrderItems']] = relationship(
+        'OrderItem',
+        uselist=True,
+        back_populates='product'
+    )
