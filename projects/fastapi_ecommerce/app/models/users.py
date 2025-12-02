@@ -53,3 +53,9 @@ class User(Base):
         back_populates='user',
         cascade='all, delete-orphan'
     )
+    orders: Mapped[List['Order']] = relationship(
+        'Order',
+        uselist=True,
+        back_populates='user',
+        cascade='all, delete-orphan'
+    )
