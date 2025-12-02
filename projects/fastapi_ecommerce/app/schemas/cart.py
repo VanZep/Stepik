@@ -39,12 +39,12 @@ class Cart(BaseModel):
     )
     total_quantity: int = Field(
         ...,
-        gt=0,
+        ge=0,
         description='Общее количество товаров'
     )
     total_price: Decimal = Field(
         ...,
-        gt=0,
+        ge=0,
         description='Общая стоимость товаров'
     )
 
