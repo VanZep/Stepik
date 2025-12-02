@@ -63,3 +63,13 @@ class CartItemCreate(BaseModel):
         gt=0,
         description='Количество товара'
     )
+
+
+class CartItemUpdate(BaseModel):
+    """Модель для обновления количества товара в корзине."""
+
+    quantity: int = Field(
+        ...,
+        gt=0,
+        description='Новое количество товара'
+    )
