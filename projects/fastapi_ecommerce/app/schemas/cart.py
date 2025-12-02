@@ -49,3 +49,17 @@ class Cart(BaseModel):
     )
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class CartItemCreate(BaseModel):
+    """Модель для добавления нового товара в корзину."""
+
+    product_id: int = Field(
+        ...,
+        description='ID товара'
+    )
+    quantity: int = Field(
+        ...,
+        gt=0,
+        description='Количество товара'
+    )
