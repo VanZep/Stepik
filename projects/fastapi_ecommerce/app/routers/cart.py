@@ -1,14 +1,18 @@
 from decimal import Decimal
 
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
+from watchfiles import awatch
 
 from app.models.users import User as UserModel
 from app.models.cart_items import CartItem as CartItemModel
 from app.schemas.cart import (
-    Cart as CartSchema, CartItem as CartItemSchema, CartItemCreate
+    Cart as CartSchema,
+    CartItem as CartItemSchema,
+    CartItemCreate,
+    CartItemUpdate
 )
 from app.db_depends import get_async_db
 from app.auth import get_current_user
@@ -89,3 +93,32 @@ async def add_item_to_cart(
     await db.commit()
 
     return await get_cart_item(db, current_user.id, payload.product_id)
+
+
+@router.put(
+    '/items/{product_id}',
+    response_model=CartItemSchema,
+    status_code=status.HTTP_200_OK
+)
+async def update_cart_item(
+        product_id: int,
+        payload: CartItemUpdate,
+        db: AsyncSession = Depends(get_async_db),
+        current_user: UserModel = Depends(get_current_user)
+):
+    """
+    Обновляет количество товара в корзине пользователя.
+    """
+    await checking_product_availability(db, product_id)
+
+    cart_item = await get_cart_item(db, current_user.id, product_id)
+    if cart_item is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Cart item not found in cart'
+        )
+
+    cart_item.quantity = payload.quantity
+    await db.commit()
+
+    return await get_cart_item(db, current_user.id, product_id)
