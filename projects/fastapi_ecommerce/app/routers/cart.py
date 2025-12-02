@@ -7,9 +7,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.users import User as UserModel
 from app.models.cart_items import CartItem as CartItemModel
-from app.schemas.cart import Cart as CartSchema
+from app.schemas.cart import (
+    Cart as CartSchema, CartItem as CartItemSchema, CartItemCreate
+)
 from app.db_depends import get_async_db
 from app.auth import get_current_user
+from app.utils import checking_product_availability, get_cart_item
 
 router = APIRouter(prefix='/cart', tags=['cart'])
 
@@ -23,7 +26,10 @@ async def get_cart(
         db: AsyncSession = Depends(get_async_db),
         current_user: UserModel = Depends(get_current_user)
 ):
-    cart_items = await db.scalars(
+    """
+    Возвращает корзину пользователя.
+    """
+    items = await db.scalars(
         select(
             CartItemModel
         ).options(
@@ -34,21 +40,52 @@ async def get_cart(
             CartItemModel.id
         )
     )
+    items = items.all()
 
-    total_quantity = sum(item.quantity for item in cart_items)
+    total_quantity = sum(item.quantity for item in items)
 
     total_price = sum(
         (
             item.product.price if item.product.price is not None
             else Decimal('0') * Decimal(item.quantity)
-            for item in cart_items
+            for item in items
         ),
         Decimal('0')
     )
 
     return CartSchema(
         user_id=current_user.id,
-        items=cart_items.all(),
+        items=items,
         total_quantity=total_quantity,
         total_price=total_price
     )
+
+
+@router.post(
+    '/items',
+    response_model=CartItemSchema,
+    status_code=status.HTTP_201_CREATED
+)
+async def add_item_to_cart(
+        payload: CartItemCreate,
+        db: AsyncSession = Depends(get_async_db),
+        current_user: UserModel = Depends(get_current_user)
+):
+    """
+    Добавляет товар в корзину пользователя.
+    """
+    await checking_product_availability(db, payload.product_id)
+
+    cart_item = await get_cart_item(db, current_user.id, payload.product_id)
+    if cart_item is not None:
+        cart_item.quantity += payload.quantity
+    else:
+        cart_item = CartItemModel(
+            **payload.model_dump(),
+            user_id=current_user.id
+        )
+        db.add(cart_item)
+
+    await db.commit()
+
+    return await get_cart_item(db, current_user.id, payload.product_id)
