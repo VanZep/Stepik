@@ -1,7 +1,8 @@
 from decimal import Decimal
-from typing import Optional
+from datetime import datetime
+from typing import Optional, List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from app.schemas.products import Product
 
@@ -10,6 +11,7 @@ class OrderItem(BaseModel):
     """
     Модель позиции в заказе.
     """
+
     id: int = Field(
         ...,
         description='Уникальный идентификатор позиции в заказе'
@@ -37,3 +39,43 @@ class OrderItem(BaseModel):
         None,
         description='Полная информация о товаре'
     )
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class Order(BaseModel):
+    """
+    Модель заказа.
+    """
+
+    id: int = Field(
+        ...,
+        description='Уникальный идентификатор заказа'
+    )
+    user_id: int = Field(
+        ...,
+        description='Уникальный идентификатор пользователя'
+    )
+    status: str = Field(
+        ...,
+        description='Текущий статус заказа'
+    )
+    total_amount: Decimal = Field(
+        ...,
+        ge=0,
+        description='Общая стоимость заказа'
+    )
+    created_at: datetime = Field(
+        ...,
+        description='Когда заказ был создан'
+    )
+    updated_at: datetime = Field(
+        ...,
+        description='Когда заказ последний раз обновлялся'
+    )
+    items: List[OrderItem] = Field(
+        default_factory=List,
+        description='Список позиций заказа'
+    )
+
+    model_config = ConfigDict(from_attributes=True)
