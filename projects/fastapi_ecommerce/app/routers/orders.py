@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from fastapi import APIRouter, status, Depends, HTTPException, Query
-from sqlalchemy import select, delete, func
+from sqlalchemy import select, delete, func, and_
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -146,3 +146,39 @@ async def list_orders(
     ) or 0
 
     return OrderList(items=orders, total=total, page=page, page_size=page_size)
+
+
+@router.get(
+    '/{order_id}',
+    response_model=OrderSchema,
+    status_code=status.HTTP_200_OK
+)
+async def get_order(
+        order_id: int,
+        db: AsyncSession = Depends(get_async_db),
+        current_user: UserModel = Depends(get_current_user)
+):
+    """
+    Возвращает детальную информацию по заказу,
+    если он принадлежит пользователю.
+    """
+    order = await db.scalars(
+        select(
+            OrderModel
+        ).options(
+            selectinload(OrderModel.items).selectinload(OrderItemModel.product)
+        ).where(
+            and_(
+                OrderModel.id == order_id,
+                OrderModel.user_id == current_user.id
+            )
+        )
+    )
+    order = order.first()
+    if order is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Order not found'
+        )
+
+    return order
