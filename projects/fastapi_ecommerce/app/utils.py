@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import Product as ProductModel
 from app.models import Review as ReviewModel
 from app.models import CartItem as CartItemModel
+from app.models import Order as OrderModel, OrderItem as OrderItemModel
 
 
 async def update_product_rating(
@@ -75,3 +76,18 @@ async def get_cart_item(
     )
 
     return item.first()
+
+
+async def load_order_with_items(db: AsyncSession, order_id: int):
+    """Возвращает заказ со всеми позициями."""
+    order = await db.scalars(
+        select(
+            OrderModel
+        ).options(
+            selectinload(OrderModel.items).selectinload(OrderItemModel.product)
+        ).where(
+            OrderModel.id == order_id
+        )
+    )
+
+    return order.first()
