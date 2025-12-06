@@ -79,3 +79,31 @@ class Order(BaseModel):
     )
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class OrderList(BaseModel):
+    """
+    Модель списка заказов с пагинацией.
+    """
+
+    items: List[Order] = Field(
+        ...,
+        description='Заказы для текущей страницы'
+    )
+    total: int = Field(
+        ...,
+        ge=0,
+        description='Общее количество заказов'
+    )
+    page: int = Field(
+        ...,
+        ge=1,
+        description='Номер текущей страницы'
+    )
+    page_size: int = Field(
+        ...,
+        ge=1,
+        description='Количество элементов на странице'
+    )
+
+    model_config = ConfigDict(from_attributes=True)

@@ -6,6 +6,7 @@ class UserCreate(BaseModel):
     Модель для создания и обновления пользователя.
     Используется в POST и PUT запросах.
     """
+
     email: EmailStr = Field(
         ...,
         description="Email пользователя"
@@ -27,6 +28,7 @@ class User(BaseModel):
     Модель для ответа с данными пользователя.
     Используется в GET-запросах.
     """
+
     id: int = Field(
         ...,
         description="Уникальный идентификатор пользователя"

@@ -8,6 +8,7 @@ class CategoryCreate(BaseModel):
     Модель для создания и обновления категории.
     Используется в POST и PUT запросах.
     """
+
     name: str = Field(
         ...,
         min_length=3,
@@ -25,6 +26,7 @@ class Category(BaseModel):
     Модель для ответа с данными категории.
     Используется в GET-запросах.
     """
+
     id: int = Field(
         ...,
         description="Уникальный идентификатор категории"

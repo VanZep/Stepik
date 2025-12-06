@@ -9,6 +9,7 @@ class ProductCreate(BaseModel):
     Модель для создания и обновления товара.
     Используется в POST и PUT запросах.
     """
+
     name: str = Field(
         ...,
         min_length=3,
@@ -47,6 +48,7 @@ class Product(BaseModel):
     Модель для ответа с данными товара.
     Используется в GET-запросах.
     """
+
     id: int = Field(
         ...,
         description="Уникальный идентификатор товара"
@@ -95,6 +97,7 @@ class ProductList(BaseModel):
     """
     Список пагинации для товаров.
     """
+
     items: List[Product] = Field(
         ...,
         description="Товары для текущей страницы"

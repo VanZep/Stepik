@@ -9,6 +9,7 @@ class ReviewCreate(BaseModel):
     Модель для создания и обновления отзыва.
     Используется в POST и PUT запросах.
     """
+
     product_id: int = Field(
         ...,
         description="ID товара, к которому относится отзыв"
@@ -30,6 +31,7 @@ class Review(BaseModel):
     Модель для ответа с данными отзыва.
     Используется в GET-запросах.
     """
+
     id: int = Field(
         ...,
         description="Уникальный идентификатор отзыва"
