@@ -1,14 +1,14 @@
 from decimal import Decimal
 
-from fastapi import APIRouter, status, Depends, HTTPException
-from sqlalchemy import select, delete
+from fastapi import APIRouter, status, Depends, HTTPException, Query
+from sqlalchemy import select, delete, func
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import User as UserModel
 from app.models import CartItem as CartItemModel
-from app.models import Order, OrderItem as OrderItemModel
-from app.schemas.orders import Order as OrderSchema
+from app.models import Order as OrderModel, OrderItem as OrderItemModel
+from app.schemas.orders import Order as OrderSchema, OrderList
 from app.db_depends import get_async_db
 from app.auth import get_current_user
 from app.utils import load_order_with_items
@@ -43,7 +43,7 @@ async def checkout_order(
             detail='Cart items not found in cart'
         )
 
-    order = Order(user_id=current_user.id)
+    order = OrderModel(user_id=current_user.id)
 
     total_amount = Decimal('0')
 
@@ -103,3 +103,46 @@ async def checkout_order(
         )
 
     return created_order
+
+
+@router.get(
+    '/',
+    response_model=OrderList,
+    status_code=status.HTTP_200_OK
+)
+async def list_orders(
+        page: int = Query(1, ge=1),
+        page_size: int = Query(10, ge=1, le=100),
+        db: AsyncSession = Depends(get_async_db),
+        current_user: UserModel = Depends(get_current_user)
+):
+    """
+    Возвращает заказы текущего пользователя с простой пагинацией.
+    """
+    orders = (await db.scalars(
+        select(
+            OrderModel
+        ).options(
+            selectinload(OrderModel.items).selectinload(OrderItemModel.product)
+        ).where(
+            OrderModel.user_id == current_user.id
+        ).order_by(
+            OrderModel.created_at.desc()
+        ).offset(
+            (page - 1) * page_size
+        ).limit(
+            page_size
+        )
+    )).all()
+
+    total = await db.scalar(
+        select(
+            func.count()
+        ).select_from(
+            OrderModel
+        ).where(
+            OrderModel.user_id == current_user.id
+        )
+    ) or 0
+
+    return OrderList(items=orders, total=total, page=page, page_size=page_size)
