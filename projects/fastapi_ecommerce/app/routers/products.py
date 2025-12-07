@@ -391,6 +391,8 @@ async def delete_product(
         )
 
     product.is_active = False
+    remove_product_image(product.image_url)
+
     await db.commit()
     await db.refresh(product)
 
