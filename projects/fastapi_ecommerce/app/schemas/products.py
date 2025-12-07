@@ -41,11 +41,31 @@ class ProductCreate(BaseModel):
     @classmethod
     def as_form(
             cls,
-            name: Annotated[str, Form(...)],
-            price: Annotated[Decimal, Form(...)],
-            stock: Annotated[int, Form(...)],
-            category_id: Annotated[int, Form(...)],
-            description: Annotated[Optional[str], Form()]
+            name: Annotated[str, Form(
+                ...,
+                min_length=3,
+                max_length=100,
+                description="Название товара (3-100 символов)"
+            )],
+            price: Annotated[Decimal, Form(
+                ...,
+                gt=0,
+                description="Цена товара (больше 0)",
+                decimal_places=2
+            )],
+            stock: Annotated[int, Form(
+                ...,
+                ge=0,
+                description="Количество товара на складе (0 или больше)"
+            )],
+            category_id: Annotated[int, Form(
+                ...,
+                description="ID категории, к которой относится товар"
+            )],
+            description: Annotated[Optional[str], Form(
+                max_length=500,
+                description="Описание товара (до 500 символов)"
+            )] = None
     ) -> 'ProductCreate':
         return cls(
             name=name,
