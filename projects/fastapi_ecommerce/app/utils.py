@@ -1,4 +1,7 @@
-from fastapi import status, HTTPException
+import uuid
+from pathlib import Path
+
+from fastapi import status, HTTPException, UploadFile
 from sqlalchemy import select, and_, func
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,6 +10,7 @@ from app.models import Product as ProductModel
 from app.models import Review as ReviewModel
 from app.models import CartItem as CartItemModel
 from app.models import Order as OrderModel, OrderItem as OrderItemModel
+from app.config import ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE, MEDIA_ROOT
 
 
 async def update_product_rating(
@@ -78,7 +82,7 @@ async def get_cart_item(
     return item.first()
 
 
-async def load_order_with_items(db: AsyncSession, order_id: int):
+async def load_order_with_items(db: AsyncSession, order_id: int) -> OrderModel:
     """Возвращает заказ со всеми позициями."""
     order = await db.scalars(
         select(
@@ -91,3 +95,28 @@ async def load_order_with_items(db: AsyncSession, order_id: int):
     )
 
     return order.first()
+
+
+async def save_product_image(file: UploadFile) -> str:
+    """
+    Сохраняет изображение товара и возвращает относительный URL.
+    """
+    if file.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only JPG, PNG or WebP images are allowed"
+        )
+
+    content = await file.read()
+    if len(content) > MAX_IMAGE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Image is too large"
+        )
+
+    extension = Path(file.filename or "").suffix.lower() or ".jpg"
+    file_name = f"{uuid.uuid4()}{extension}"
+    file_path = MEDIA_ROOT / file_name
+    file_path.write_bytes(content)
+
+    return f"/media/products/{file_name}"
