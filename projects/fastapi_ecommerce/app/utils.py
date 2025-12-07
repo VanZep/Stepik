@@ -10,7 +10,9 @@ from app.models import Product as ProductModel
 from app.models import Review as ReviewModel
 from app.models import CartItem as CartItemModel
 from app.models import Order as OrderModel, OrderItem as OrderItemModel
-from app.config import ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE, MEDIA_ROOT
+from app.config import (
+    BASE_DIR, MEDIA_ROOT, ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE
+)
 
 
 async def update_product_rating(
@@ -120,3 +122,16 @@ async def save_product_image(file: UploadFile) -> str:
     file_path.write_bytes(content)
 
     return f"/media/products/{file_name}"
+
+
+def remove_product_image(url: str | None) -> None:
+    """
+    Удаляет файл изображения, если он существует.
+    """
+    if not url:
+        return
+
+    relative_path = url.lstrip("/")
+    file_path = BASE_DIR / relative_path
+    if file_path.exists():
+        file_path.unlink()
