@@ -28,12 +28,14 @@ class OrderItem(BaseModel):
     unit_price: Decimal = Field(
         ...,
         ge=0,
-        description='Цена за единицу на момент покупки'
+        description='Цена за единицу на момент покупки',
+        decimal_places=2
     )
     total_price: Decimal = Field(
         ...,
         ge=0,
-        description='Сумма по позиции'
+        description='Сумма по позиции',
+        decimal_places=2
     )
     product: Optional[Product] = Field(
         None,
@@ -63,7 +65,8 @@ class Order(BaseModel):
     total_amount: Decimal = Field(
         ...,
         ge=0,
-        description='Общая стоимость заказа'
+        description='Общая стоимость заказа',
+        decimal_places=2
     )
     created_at: datetime = Field(
         ...,

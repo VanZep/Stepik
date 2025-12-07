@@ -1,7 +1,9 @@
 from decimal import Decimal
 from typing import List, Optional
 
-from fastapi import APIRouter, status, Depends, HTTPException, Query
+from fastapi import(
+    APIRouter, status, Depends, HTTPException, Query, UploadFile, File
+)
 from sqlalchemy import select, and_, update, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,6 +15,17 @@ from app.schemas.products import (
 )
 from app.db_depends import get_async_db
 from app.auth import get_current_seller
+from app.utils import save_product_image
+
+# from pathlib import Path
+# import uuid
+# from fastapi import UploadFile, File, Form, HTTPException, status
+#
+# BASE_DIR = Path(__file__).resolve().parent.parent.parent
+# MEDIA_ROOT = BASE_DIR / "media" / "products"
+# MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
+# ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
+# MAX_IMAGE_SIZE = 2 * 1024 * 1024  # 2 097 152 байт
 
 router = APIRouter(prefix='/products', tags=['products'])
 
@@ -141,7 +154,8 @@ async def get_all_products(
     status_code=status.HTTP_201_CREATED
 )
 async def create_product(
-        product: ProductCreate,
+        product: ProductCreate = Depends(ProductCreate.as_form),
+        image: Optional[UploadFile] = File(None),
         db: AsyncSession = Depends(get_async_db),
         current_user: UserModel = Depends(get_current_seller)
 ):
@@ -165,9 +179,12 @@ async def create_product(
             detail='Category not found or not active'
         )
 
+    image_url = await save_product_image(image) if image else None
+
     product_db = ProductModel(
         **product.model_dump(),
-        seller_id=current_user.id
+        seller_id=current_user.id,
+        image_url=image_url
     )
     db.add(product_db)
     await db.commit()
@@ -379,3 +396,41 @@ async def delete_product(
     await db.refresh(product)
 
     return product
+
+#
+# async def save_product_image(file: UploadFile) -> str:
+#     """
+#     Сохраняет изображение товара и возвращает относительный URL.
+#     """
+#     if file.content_type not in ALLOWED_IMAGE_TYPES:
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail="Only JPG, PNG or WebP images are allowed"
+#         )
+#
+#     content = await file.read()
+#     if len(content) > MAX_IMAGE_SIZE:
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail="Image is too large"
+#         )
+#
+#     extension = Path(file.filename or "").suffix.lower() or ".jpg"
+#     file_name = f"{uuid.uuid4()}{extension}"
+#     file_path = MEDIA_ROOT / file_name
+#     file_path.write_bytes(content)
+#
+#     return f"/media/products/{file_name}"
+#
+#
+# def remove_product_image(url: str | None) -> None:
+#     """
+#     Удаляет файл изображения, если он существует.
+#     """
+#     if not url:
+#         return
+#
+#     relative_path = url.lstrip("/")
+#     file_path = BASE_DIR / relative_path
+#     if file_path.exists():
+#         file_path.unlink()
