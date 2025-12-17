@@ -42,7 +42,6 @@ class NewList:
         self.__lst = lst if lst and isinstance(lst, list) else []
 
     def __sub__(self, other):
-        # if not
         other = other.__lst if isinstance(other, NewList) else other
 
         return NewList(self.diff_list(other, self.__lst))
