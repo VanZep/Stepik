@@ -31,7 +31,7 @@ P.S. В программе достаточно только объявить к
 выводить не нужно.
 """
 
-from typing import Union, Optional
+from typing import Union
 
 
 class Box3D:
@@ -46,7 +46,7 @@ class Box3D:
         self.height = height
         self.depth = depth
 
-    def __add__(self, other: 'Box3D') -> Optional['Box3D']:
+    def __add__(self, other: 'Box3D') -> 'Box3D':
         if isinstance(other, Box3D):
             return Box3D(
                 self.width + other.width,
@@ -73,7 +73,7 @@ class Box3D:
             'Эту операцию можно выполнять только с целым числом справа'
         )
 
-    def __sub__(self, other: 'Box3D') -> Optional['Box3D']:
+    def __sub__(self, other: 'Box3D') -> 'Box3D':
         if isinstance(other, Box3D):
             return Box3D(
                 self.width - other.width,
