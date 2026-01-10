@@ -32,13 +32,17 @@ class Rect:
         self.width = width
         self.height = height
 
-    def __setattr__(self, key, value):
-        if not isinstance(value, float) and type(value) != int:
-            raise TypeError('Неверный тип данных')
+    def __setattr__(self, key, value) -> None:
+        self.int_float_validator(value)
         super.__setattr__(self, key, value)
 
     def __hash__(self) -> int:
         return hash((self.width, self.height))
+
+    @staticmethod
+    def int_float_validator(value) -> None:
+        if not isinstance(value, float) and type(value) != int:
+            raise TypeError('Неверный тип данных')
 
 
 r1 = Rect(10, 5, 100, 50)
